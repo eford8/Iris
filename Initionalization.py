@@ -19,13 +19,27 @@ print(df)
 newdf = df[(df["class"] != "Iris-setosa")]
 print(newdf.head())
 print("The number of lines that are not Iris-setosa: " + str(len(newdf)))
+
+#if versicolor, class == 1
+#if not versicolor (then it would be virginica), class == 0
+lables = []
+for type in newdf["class"]:
+    if  type == "Iris-versicolor":
+        lables.append(1)
+    else:
+        lables.append(0)
+
+newdf["lables"] = lables
+
+
 new_list_of_column_names = list(newdf.columns)
 print(new_list_of_column_names)
-#sepallength, sepalwidth, petallength, petalwidth, class 
+#sepallength, sepalwidth, petallength, petalwidth, class, lables 
 
 #Create a modified csv file for the modified data
 newdf.to_csv("DATA/irisModified.csv", index = False)
 modifiedDate = "DATA/irisModified.csv"
+
 
 #use scikit-learn to perform classification using the Random Forests classifier.
 clf = RandomForestClassifier(random_state=0)
@@ -52,6 +66,7 @@ RandomForestClassifier(random_state=1) # set the random seed using the RANDOM_ST
 with open("DATA/irisData.tsv", "w") as tsvFile:
     tsv_writer = csv.writer(tsvFile, delimiter='\t', lineterminator='\n')
     #tsv_writer.writerow(["Word", "Count"])
+    # columns = ["ogRomNum", "prbVersiClassifierOne", "prbVersiClassifierTwo", "prbVersiClassifierThree", "versi/virgincia", "cross-validationFold"]
 
 #It should have columns that indicate the original row number of each iris flower and the probability that each flower is versicolor (for each of the three classifiers). 
 #It should also have columns that indicate "versicolor" if the probability for a given classifier was >= 0.5 or "virginica" if the probability was < 0.5. 
