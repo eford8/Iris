@@ -50,7 +50,6 @@ clf = RandomForestClassifier(random_state=0)
 
 #Then we need to use 5 fold-cross validation
 
-
 #X = [[ 1,  2,  3],  # 2 samples, 3 features  #The size of X is typically (n_samples, n_features), which means that samples are represented as rows and features are represented as columns.
 #      [11, 12, 13]]
 # y = [0, 1]  # classes of each sample
