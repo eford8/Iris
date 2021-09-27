@@ -9,6 +9,7 @@ from sklearn.metrics import roc_auc_score
 import random
 import sys
 import csv
+import os
 
 
 
@@ -18,9 +19,7 @@ def cross_validate(df, labels, clf) :
     X = df
     y = labels
     y = y.astype('int')
-    #print(XX.shape)
-    #print(y.shape)
-
+    
     scoring_metric = "roc_auc"
     n_jobs = 2
 
@@ -38,9 +37,13 @@ def cross_validate(df, labels, clf) :
         classifier.fit(X[train_index], y[train_index])
         probabilities = classifier.predict_proba(X[test_index])
         print(probabilities)
+
         #Find the rocaucscore
-        #rocaucscores = roc_auc_score(y, clf.predict_proba(X)[:, 1])
+        #We have a Binary case
+        #Unable to fill in the correct parameters
+        #rocaucscores = roc_auc_score(y[train_index], classifier.predict_proba(X[test_index])) 
         #print(rocaucscores)
+        
     
 
     scores = []
@@ -101,25 +104,61 @@ def createTSV(results):
         #It should have columns that indicate the original row number of each iris flower and the probability that each flower is versicolor (for each of the three classifiers). 
         #It should also have columns that indicate "versicolor" if the probability for a given classifier was >= 0.5 or "virginica" if the probability was < 0.5. 
         #Name these columns descriptively. Each row should indicate which cross-validation fold each flower was used in the test set.
-        tsvFile.write("ogRomNum\tprbVersiRandomForest\tprbVersiLogReg\tprbVersiKNeighbor\tversi/virgincia\tcross-validationFold\n")
+        tsvFile.write("ogRowNum\ttypeClassifier\tprbVersi(RandomForest, LogReg, KNeighbor)\tversi/virgincia\tcross-validationFold\n")
+        #example: 3 RandomForest 0.6    Versicolor  3
+        #example: 5 LogReg 0.2 Virgincia 1
+
 
 #Calling the createTSV function
-#createTSV(results)
+createTSV(results)
 
 #Write a separate Python script that parses the TSV file and calculates the classification accuracy 
 #for each of the three algorithms and prints this to the screen. 
 #In other words, how frequently did the predictions ("versicolor" or "virginica") coincide with the actual species.
-def calClassificationAccuracy (results):
-    irisData = "DATA/irisData.tsv"
-    #with open(irisData, "w") as tsvFile:
-     #   for row in tsvFile:
-      #      print(row)
 
-    print("Classification accuracy for Random Forests classifier: ")
-    print("Classification accuracy for LogisticRegression: ")
-    print("Classification accuracy for k-nearest neighbors: ")
+#-------------------------------------------------------------
+#I think part some of the errors I am receiving are due to a lack on data in the tsv file
+#This is the fuction I have create. 
 
-#Calling the calClassificationAccuracy Function
+
+##def calClassificationAccuracy (results):
+#    irisDataResults = "DATA/irisData.tsv"
+#    ogIrisData = "DATA/irisModified.csv"
+#    # check if size of file is 0 checking if it is empty or not
+#    if os.stat(irisDataResults).st_size == 0:
+#        print('File is empty')
+#    else:
+#        print('File is not empty')
+#
+#    dataResults = pd.read_csv (irisDataResults, sep = '\t')
+#    ogData = pd.read_csv (ogIrisData)
+#    classifierList = ["RandomForest", "LogReg", "Kneighbor"]
+#    i = 0
+#    while i < len(classifierList):
+#        typeClassifier = classifierList[i]
+#        counterCorrect = 0
+#        totalSamples = 0
+#
+#       #just go throught all the rows that contain the classifier than we want
+#       for rows in dataResults[(dataResults["typeClassifier"] == typeClassifier)]:
+#           #get orginal row number
+#            rowNum = dataResults.loc[(dataResults["ogRowNum"])]
+#            #Find out if the flower is versicolor or virginica
+#            flowerType = ogData["class"] 
+#            print(flowerType)
+#            #compare classifier result with real result
+#            if dataResults["versi/virgincia"][rowNum] == flowerType:
+#                counterCorrect = counterCorrect + 1
+#                totalSamples = totalSamples + 1
+#            else:
+#                totalSamples = totalSamples + 1
+#
+#        i = i + 1
+#        classificationAccuracy = (counterCorrect / totalSamples) * 100
+#        print("Classification accuracy for " + typeClassifier + "is: " + classificationAccuracy)
+       
+
+#   #Calling the calClassificationAccuracy Function
 #calClassificationAccuracy(results)
 
-
+#------------------------------------------------------------------------
