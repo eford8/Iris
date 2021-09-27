@@ -1,1 +1,1 @@
-ogRomNum	prbVersiRandomForest	prbVersiLogReg	prbVersiKNeighbor	versi/virgincia	cross-validationFold
+ogRowNum	typeClassifier	prbVersi(RandomForest, LogReg, KNeighbor)	versi/virgincia	cross-validationFold
