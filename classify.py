@@ -31,18 +31,26 @@ def cross_validate(df, labels, clf) :
     sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1) 
 
     iteration = 0
+    probs = np.array([]).reshape(0,2)
+    auc_roc_scores = []
 
     for train_index, test_index in sss.split(X, y):
         iteration += 1
         #print("TRAIN:", train_index, "TEST:", test_index)
         classifier.fit(X[train_index], y[train_index])
         probabilities = classifier.predict_proba(X[test_index])
+        probs = np.vstack([probs, probabilities])
+        print("Probabilities")
         print(probabilities)
         #Find the rocaucscore
-        #rocaucscores = roc_auc_score(y, clf.predict_proba(X)[:, 1])
-        #print(rocaucscores)
+        rocaucscores = roc_auc_score(y, classifier.predict_proba(X)[:, 1])
+        auc_roc_scores.append(rocaucscores)
+        print("roc scores")
+        print(rocaucscores)
     
-
+    print(probs.shape)
+    print(auc_roc_scores)
+    return probs, auc_roc_scores
     scores = []
     #for i in range(iterations) :
         #params = clf[1]
@@ -87,10 +95,12 @@ predictColumn = df[:, 5]
 
 
 for classifier in CLASSIFIERS:
-    for score in cross_validate(data, predictColumn, classifier):
+    scores, auc_scores = cross_validate(data, predictColumn, classifier)
+    for score in scores:
         classifier_name = str(classifier[0]).split("'")[1].split(".")[-1].replace("Classifier", "")
         results.append([classifier_name, "labels", str(score)])
 
+print("scores")
 print(results)
 
 
