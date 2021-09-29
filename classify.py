@@ -125,9 +125,9 @@ def createTSV(results):
             # checks probability of versicolor and makes prediction 
             predict = ""
             if(prediction[4] >= 0.5) :
-                predict = "versicolor"
+                predict = "Iris-versicolor"
             else:
-                predict = "virginica"
+                predict = "Iris-virginica"
     
             tsvFile.write('\t'.join([str(int(prediction[2])), str(prediction[0]), str(prediction[4]), predict, str(int(prediction[1]))]) + '\n')
             #tsvFile.write(int(results[2]) + '\t' + results[0] + '\t' + results[4] + '\t' + "prediction" + '\t' + int(results[1]) + '\n')
