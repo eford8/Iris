@@ -38,10 +38,8 @@ with open("DATA/classificationAccuracy.tsv", "w") as tsvFile:
         foldThreeCounter = 0
         foldFourCounter = 0
         foldFiveCounter = 0
-        TOTALSAMPLES = 20
-        #print(dataResults)
-        #print(dataResults.columns)
-        #print(dataResults["tClassifier"])
+        TOTAINTERATIONS = 20
+        TOTALSAMPLES = 100
         
         #just go throught all the rows that contain the classifier than we want
         for row in dataResults["tClassifier"]:
@@ -52,7 +50,7 @@ with open("DATA/classificationAccuracy.tsv", "w") as tsvFile:
 
                 #Find out if the orginal flower is versicolor or virginica
                 flowerType = ogData["class"].iloc[ogRowNum]
-                
+
                 #find the cross-validationFold
                 interationNum = dataResults["cross-validationFold"].iloc[rowCounter]
 
@@ -75,34 +73,24 @@ with open("DATA/classificationAccuracy.tsv", "w") as tsvFile:
                 
             rowCounter += 1
 
-        classificationAccuracy = (foldOneCounter / TOTALSAMPLES)
-        print("Classification accuracy for " + typeClassifier + " for fold one is: " + str(classificationAccuracy))
+        classificationAccuracy = (foldOneCounter / TOTAINTERATIONS)
+        print("Classification accuracy for " + typeClassifier + " for interation one is: " + str(classificationAccuracy))
         tsvFile.write('\t'.join([str(1), typeClassifier, str(classificationAccuracy)]) + '\n')
 
-        classificationAccuracy = (foldTwoCounter / TOTALSAMPLES)
-        print("Classification accuracy for " + typeClassifier + " for fold two is: " + str(classificationAccuracy))
+        classificationAccuracy = (foldTwoCounter / TOTAINTERATIONS)
+        print("Classification accuracy for " + typeClassifier + " for interation two is: " + str(classificationAccuracy))
         tsvFile.write('\t'.join([str(2), typeClassifier, str(classificationAccuracy)]) + '\n')
 
-        classificationAccuracy = (foldThreeCounter / TOTALSAMPLES)
-        print("Classification accuracy for " + typeClassifier + " for fold three is: " + str(classificationAccuracy))
+        classificationAccuracy = (foldThreeCounter / TOTAINTERATIONS)
+        print("Classification accuracy for " + typeClassifier + " for interation three is: " + str(classificationAccuracy))
         tsvFile.write('\t'.join([str(3), typeClassifier, str(classificationAccuracy)]) + '\n')
 
-        classificationAccuracy = (foldFourCounter / TOTALSAMPLES)
-        print("Classification accuracy for " + typeClassifier + " for fold four is: " + str(classificationAccuracy))
+        classificationAccuracy = (foldFourCounter / TOTAINTERATIONS)
+        print("Classification accuracy for " + typeClassifier + " for interation four is: " + str(classificationAccuracy))
         tsvFile.write('\t'.join([str(4), typeClassifier, str(classificationAccuracy)]) + '\n')
 
-        classificationAccuracy = (foldFiveCounter / TOTALSAMPLES)
-        print("Classification accuracy for " + typeClassifier + " for fold five is: " + str(classificationAccuracy))
+        classificationAccuracy = (foldFiveCounter / TOTAINTERATIONS)
+        print("Classification accuracy for " + typeClassifier + " for interation five is: " + str(classificationAccuracy))
         tsvFile.write('\t'.join([str(5), typeClassifier, str(classificationAccuracy)]) + '\n')
           
-
-#avge the 3 preditions for the 3 classifiers
-#majoirty vote = if two or more says it is the class
-#2/3 prob for veriscolor
-#3/3 prob or 0/3 = 0 versicolor
-#maxprob = which one has the highest prob
-#
-#tsv file
-#input that we are working on rn
-#using those 3 as the aligrithom (tClassifier)
  
