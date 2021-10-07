@@ -62,6 +62,10 @@ RandomForestClassifier(random_state=1) # set the random seed using the RANDOM_ST
 
 #Modify the script so that it creates a TSV file that is clearly named (indicates that it's for the iris data). 
 
+##################
+### Do we actually need this part down here or is it just leftover from code somewhere else?
+##################
+
 with open("DATA/irisData.tsv", "w") as tsvFile:
     tsv_writer = csv.writer(tsvFile, delimiter='\t', lineterminator='\n')
     #tsv_writer.writerow(["Word", "Count"])

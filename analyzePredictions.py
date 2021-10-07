@@ -1,11 +1,17 @@
 import pandas as pd 
 
-irisDataResults = "DATA/irisData.tsv"
-ogIrisData = "DATA/irisModified.csv"
-classificationAccuracy = "DATA/classidicationAccuracy.tsv"
 
-dataResults = pd.read_csv (irisDataResults, sep = '\t')
-ogData = pd.read_csv (ogIrisData)
+#######
+## possibly rename this file I don't think it explains exactly what we are doing here 
+#######
+
+resultsFile = "DATA/irisClassifications.tsv"
+origionalData = "DATA/irisModified.csv"
+classificationAccuracy = "DATA/classidicationAccuracy.tsv"
+outfile = "DATA/ensemblePredictions.tsv"
+
+dataResults = pd.read_csv (resultsFile, sep = '\t')
+ogData = pd.read_csv (origionalData)
 
 # break up the tsv file into three different files/dataframes 
 randomForestData = dataResults[0:100]
@@ -89,8 +95,8 @@ listmajority = majorityVote()
 listmax = maxProb()
 
 #create a tsv file
-with open("DATA/analyzePredictions.tsv", "w") as tsvFile:
-    tsvFile.write("ogRowNum\togFlowerType\tavgPredition\tmajorityVote\tmaxProb\n")
+with open(outfile, "w") as tsvFile:
+    tsvFile.write("OrigionalRow\tClass\tAvgPredition\tMajorityVote\tMaxProb\n")
     for x in range(0, 100):
         tsvFile.write(str(dataResults.iloc[x, 0]) + '\t' + str(ogData["class"].iloc[dataResults.iloc[x, 0]]) + "\t" +  str(listavg[x]) + '\t' + str(listmajority[x]) + '\t' + str(listmax[x]) + '\n')
 

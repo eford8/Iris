@@ -11,7 +11,10 @@ import sys
 import csv
 import os
 
-fileName = "DATA/irismodified.csv"
+fileName = "DATA/irisModified.csv"
+outfile = "DATA/irisClassifications.tsv"
+class1 = "Iris-versicolor"
+class2 = "Iris-virginica"
 
 def cross_validate(df, labels, clf) :
     X = df
@@ -85,16 +88,17 @@ print(results)
 #Modify the script so that it creates a TSV file that is clearly named (indicates that it's for the iris data). 
 def createTSV(results):
     print("createTSV function called")
-    with open("DATA/irisData.tsv", "w") as tsvFile:
-        tsvFile.write("ogRowNum\ttClassifier\tprobability of versicolor\tprediction\tcross-validationFold\n")
+    print(outfile)
+    with open(outfile, "w") as tsvFile:
+        tsvFile.write("OrigionalRow\tClassifier\tPredictionScore\tPrediction\tIteration\n")
         rownum = 1
         for prediction in results:
             # checks probability of versicolor and makes prediction 
             predict = ""
             if(prediction[4] >= 0.5) :
-                predict = "Iris-versicolor"
+                predict = class1
             else:
-                predict = "Iris-virginica"
+                predict = class2
     
             tsvFile.write('\t'.join([str(int(prediction[2])), str(prediction[0]), str(prediction[4]), predict, str(int(prediction[1]))]) + '\n')
             #tsvFile.write(int(results[2]) + '\t' + results[0] + '\t' + results[4] + '\t' + "prediction" + '\t' + int(results[1]) + '\n')
