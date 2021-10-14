@@ -26,7 +26,7 @@ RUN apt-get update
 # Install Python packages
 ####################################################################################
 
-RUN wget --quiet conda install numpy scikit-learn pandas tensorflow=1.11.0 auto-sklearn
+RUN conda install numpy scikit-learn pandas tensorflow=1.11.0 auto-sklearn
 
 ####################################################################################
 # Install Confounded within the image
