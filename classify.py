@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np
 import sklearn
+#from autosklearn.classification import AutoSklearnClassifier ## install auto-sklearn probably has to be in docker or ubuntu
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -41,8 +42,7 @@ def cross_validate(df, labels, clf) :
         classifier.fit(X[train_index], y[train_index])
         probabilities = classifier.predict_proba(X[test_index])
         probs = np.vstack([probs, probabilities])
-        #print("Probabilities")
-        #print(probabilities)
+
 
         #Find the rocaucscore
         rocaucscores = roc_auc_score(y, classifier.predict_proba(X)[:, 1])
@@ -64,7 +64,8 @@ def cross_validate(df, labels, clf) :
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
     (LogisticRegression, {"random_state" : 0}),
-    (KNeighborsClassifier, {})
+    (KNeighborsClassifier, {})#,
+    #(AutoSklearnClassifier, {})
 ]
 
 results = []
