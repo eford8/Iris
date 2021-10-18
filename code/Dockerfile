@@ -26,7 +26,7 @@ RUN apt-get update
 # Install Python packages
 ####################################################################################
 
-RUN conda install numpy scikit-learn pandas tensorflow=1.11.0 auto-sklearn
+RUN pip install numpy scikit-learn pandas tensorflow=1.11.0 auto-sklearn
 
 ####################################################################################
 # Install Confounded within the image
@@ -38,7 +38,7 @@ RUN cd /tmp && \
     mv /tmp/Iris/iris /iris && \
     mv /tmp/Iris/data /iris && \
     rm -rf /tmp/Iris && \
-    echo '#!/bin/bash\ncd /iris\npython -m confounded "$@"' > /usr/bin/iris && \
+    echo '#!/bin/bash\ncd /iris\npython -m iris "$@"' > /usr/bin/iris && \
     chmod +x /usr/bin/iris && \
     chmod 777 /iris -R && \
     echo "Done importing Iris code"
