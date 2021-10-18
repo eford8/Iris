@@ -33,7 +33,7 @@ RUN pip install numpy scikit-learn pandas auto-sklearn
 ####################################################################################
 
 RUN cd /tmp && \
-    git clone https://github.com/eford8/Iris.git && \
+    git clone https://github.com:eford8/Iris.git#main && \
     mkdir /iris && \
     mv /tmp/Iris/iris /iris && \
     mv /tmp/Iris/data /iris && \
