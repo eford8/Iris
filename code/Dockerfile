@@ -26,14 +26,7 @@ RUN apt-get update
 # Install Python packages
 ####################################################################################
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/miniconda.sh && \
-  /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-  rm ~/miniconda.sh && \
-  /opt/conda/bin/conda clean -tipsy && \
-  ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-  echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-  echo "conda activate base" >> ~/.bashrc && \
-  pip conda numpy scikit-learn pandas tensorflow=1.11.0 auto-sklearn
+RUN pip install numpy scikit-learn pandas auto-sklearn
 
 ####################################################################################
 # Install Confounded within the image
