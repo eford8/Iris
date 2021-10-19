@@ -47,7 +47,7 @@ RUN cd /tmp && \
 # Copy files into the image
 ####################################################################################
 
-COPY figures /figures
+#COPY figures /figures
 COPY all.sh /
 
 ENTRYPOINT /all.sh
