@@ -29,12 +29,13 @@ RUN apt-get update
 RUN pip install numpy scikit-learn pandas auto-sklearn
 
 ####################################################################################
-# Install Confounded within the image
+# Install Iris within the image
 ####################################################################################
 
 RUN cd /tmp && \
     git clone https://github.com/eford8/Iris.git && \
     mkdir /iris && \
+    ls && \
     mv /tmp/Iris/code /iris && \
     mv /tmp/Iris/data /iris && \
     rm -rf /tmp/Iris && \
