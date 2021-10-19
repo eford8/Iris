@@ -42,6 +42,7 @@ RUN cd /tmp && \
     echo '#!/bin/bash\ncd /iris\npython -m iris "$@"' > /usr/bin/iris && \
     chmod +x /usr/bin/iris && \
     chmod 777 /iris -R && \
+    cd iris && \
     echo "Done importing Iris code"
 
 ####################################################################################
