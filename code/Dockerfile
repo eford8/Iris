@@ -37,7 +37,7 @@ RUN cd /tmp && \
     mkdir /iris && \
     ls Iris/ && \
     mv /tmp/Iris/code /iris && \
-    mv /tmp/Iris/data /iris && \
+    mv /tmp/Iris/DATA /iris && \
     rm -rf /tmp/Iris && \
     echo '#!/bin/bash\ncd /iris\npython -m iris "$@"' > /usr/bin/iris && \
     chmod +x /usr/bin/iris && \
