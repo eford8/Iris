@@ -5,10 +5,10 @@ import pandas as pd
 ## possibly rename this file I don't think it explains exactly what we are doing here 
 #######
 
-resultsFile = "DATA/irisClassifications.tsv"
-origionalData = "DATA/irisModified.csv"
-classificationAccuracy = "DATA/classidicationAccuracy.tsv"
-outfile = "DATA/ensemblePredictions.tsv"
+resultsFile = "results/irisClassifications.tsv"
+origionalData = "data/irisModified.csv"
+classificationAccuracy = "results/classidicationAccuracy.tsv"
+outfile = "results/ensemblePredictions.tsv"
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (origionalData)

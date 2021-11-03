@@ -37,12 +37,12 @@ RUN cd /tmp && \
     mkdir /iris && \
     ls Iris/ && \
     mv /tmp/Iris/code /iris && \
-    mv /tmp/Iris/DATA /iris && \
+    mv /tmp/Iris/data /iris && \
     rm -rf /tmp/Iris && \
     echo '#!/bin/bash\ncd /iris\npython -m iris "$@"' > /usr/bin/iris && \
     chmod +x /usr/bin/iris && \
     chmod 777 /iris -R && \
-    cd iris && \
+    #cd iris && \
     echo "Done importing Iris code"
 
 ####################################################################################
@@ -50,6 +50,16 @@ RUN cd /tmp && \
 ####################################################################################
 
 #COPY figures /figures
+#####
+#for now all these files are copied one ny one, but I think that It probably would be 
+#easier if we put them in respective folders by what they do so we can more easily copy
+#them over as well as add and delete fies without any problems 
+######
+COPY analyzePredictions.py /
+COPY classificationAccuracy.py /
+#COPY classificationAccuravy.R /
+COPY classify.py /
+COPY initialization.py /
 COPY all.sh /
 
-ENTRYPOINT /all.sh
+ENTRYPOINT bash /all.sh

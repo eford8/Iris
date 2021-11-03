@@ -1,9 +1,8 @@
-all.sh
 #! /bin/bash
 
-python Initialization.py
+#python initialization.py
 
-python classify.py
+#python classify.py
 
 python classificationAccuracy.py
 

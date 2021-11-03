@@ -15,9 +15,9 @@ import os
 #for each of the three algorithms and prints this to the screen. 
 #In other words, how frequently did the predictions ("versicolor" or "virginica") coincide with the actual species.
  
-resultsFile = "DATA/irisClassifications.tsv"
-origionalData = "DATA/irisModified.csv"
-outfile = "DATA/classificationAccuracy.tsv"
+resultsFile = "results/irisClassifications.tsv"
+origionalData = "data/irisModified.csv"
+outfile = "results/classificationAccuracy.tsv"
 
 # check if size of file is 0 checking if it is empty or not
 if os.stat(resultsFile).st_size == 0:
@@ -27,7 +27,7 @@ else:
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (origionalData)
-classifierList = ["RandomForest", "LogisticRegression", "KNeighbors"]
+classifierList = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSklearn"]
 
 with open(outfile, "w") as tsvFile:
     tsvFile.write("Iteration\tClassifier\tClassificationAccurayScore\n")

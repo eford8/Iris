@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 #Read in the Date from the csv file using Pandas 
 print("Hello Iris")
-fileName = "DATA/iris.csv"
+fileName = "data/iris.csv"
 df = pd.read_csv(fileName)
 list_of_column_names = list(df.columns)
 print('List of column names : ',list_of_column_names)
@@ -37,8 +37,8 @@ print(new_list_of_column_names)
 #sepallength, sepalwidth, petallength, petalwidth, class, lables 
 
 #Create a modified csv file for the modified data
-newdf.to_csv("DATA/irisModified.csv", index = False)
-modifiedDate = "DATA/irisModified.csv"
+newdf.to_csv("data/irisModified.csv", index = False)
+modifiedDate = "data/irisModified.csv"
 
 
 #use scikit-learn to perform classification using the Random Forests classifier.
@@ -66,7 +66,7 @@ RandomForestClassifier(random_state=1) # set the random seed using the RANDOM_ST
 ### Do we actually need this part down here or is it just leftover from code somewhere else?
 ##################
 
-with open("DATA/irisData.tsv", "w") as tsvFile:
+with open("data/irisData.tsv", "w") as tsvFile:
     tsv_writer = csv.writer(tsvFile, delimiter='\t', lineterminator='\n')
     #tsv_writer.writerow(["Word", "Count"])
     # columns = ["ogRomNum", "prbVersiClassifierOne", "prbVersiClassifierTwo", "prbVersiClassifierThree", "versi/virgincia", "cross-validationFold"]
