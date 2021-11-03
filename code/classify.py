@@ -12,8 +12,8 @@ import sys
 import csv
 import os
 
-fileName = "DATA/irisModified.csv"
-outfile = "DATA/irisClassifications.tsv"
+fileName = "data/irisModified.csv"
+outfile = "results/irisClassifications.tsv"
 class1 = "Iris-versicolor"
 class2 = "Iris-virginica"
 
@@ -35,10 +35,14 @@ def cross_validate(df, labels, clf) :
     probs = np.array([]).reshape(0,2)
     auc_roc_scores = []
     scores = np.array([]).reshape(0,5)
-
+    
+    #autosklearn reauires casting from numpy.object_
+    X = X.astype(float)
     for train_index, test_index in sss.split(X, y):
         iteration += 1
+        
         print("TRAIN:", train_index, "TEST:", test_index)
+        print("TRAINING X SET \n",clf, X[train_index])
         classifier.fit(X[train_index], y[train_index])
         probabilities = classifier.predict_proba(X[test_index])
         probs = np.vstack([probs, probabilities])

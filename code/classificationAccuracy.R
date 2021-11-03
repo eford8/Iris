@@ -3,7 +3,7 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 
-directory <- 'Desktop/Piccolo_Research/Iris/DATA/'
+directory <- 'Desktop/Piccolo_Research/Iris/data/'
 classifiers <- c('RandomForest', 'LogisticRegression', 'KNeighbors')
 iterations <- c(`1` = "Iteration 1", `2` = "Iteration 2", `3` ="Iteration 3", `4` = "Iteration 4", `5` = "Iteration 5")
 
