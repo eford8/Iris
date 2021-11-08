@@ -22,14 +22,14 @@ def irisDataInitialization () :
 
     #if versicolor, class == 1
     #if not versicolor (then it would be virginica), class == 0
-    lables = []
+    target = []
     for type in newdf["class"]:
         if  type == "Iris-versicolor":
-            lables.append(1)
+            target.append(1)
         else:
-            lables.append(0)
+            target.append(0)
 
-    newdf["lables"] = lables
+    newdf["target"] = target
 
 
     new_list_of_column_names = list(newdf.columns)
@@ -40,7 +40,7 @@ def irisDataInitialization () :
     newdf.to_csv("data/irisModified.csv", index = False)
     #modifiedDate = "data/irisModified.csv"
 
-#irisDataInitialization()
+irisDataInitialization()
 
 
 ####### BREAST DATA ############
