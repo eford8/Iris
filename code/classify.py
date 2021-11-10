@@ -7,15 +7,16 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import roc_auc_score
+from autokeras import StructuredDataClassifier
 import random
 import sys
 import csv
 import os
 
-fileName = "data/irisModified.csv"
-outfile = "results/irisClassifications.tsv"
-class1 = "Iris-versicolor"
-class2 = "Iris-virginica"
+fileName = "data/" + sys.argv[1] + "Modified.csv"
+outfile = "results/" + sys.argv[1] + "Classifications.tsv"
+class1 = sys.argv[2]
+class2 = sys.argv[3]
 
 def cross_validate(df, labels, clf) :
     X = df
@@ -32,6 +33,8 @@ def cross_validate(df, labels, clf) :
     sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1) 
 
     iteration = 0
+    ########
+    #this needs to be more available for peole
     probs = np.array([]).reshape(0,2)
     auc_roc_scores = []
     scores = np.array([]).reshape(0,5)
@@ -40,11 +43,14 @@ def cross_validate(df, labels, clf) :
     X = X.astype(float)
     for train_index, test_index in sss.split(X, y):
         iteration += 1
-        
-        print("TRAIN:", train_index, "TEST:", test_index)
-        print("TRAINING X SET \n",clf, X[train_index])
+        probabilities = np.ndarray
+        #print("TRAIN:", train_index, "TEST:", test_index)
+        #print("TRAINING X SET \n",clf, X[train_index])
         classifier.fit(X[train_index], y[train_index])
-        probabilities = classifier.predict_proba(X[test_index])
+        if(classifier == StructuredDataClassifier) :
+            probabilities = classifier.predict(X[test_index])
+        else : 
+            probabilities = classifier.predict_proba(X[test_index])
         probs = np.vstack([probs, probabilities])
 
 
@@ -62,14 +68,15 @@ def cross_validate(df, labels, clf) :
         scores = np.vstack([scores,combined])
 
     
-    print(scores)
+    #print(scores)
     return scores
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
     (LogisticRegression, {"random_state" : 0}),
     (KNeighborsClassifier, {}),
-    (AutoSklearnClassifier, {})
+    #(AutoSklearnClassifier, {}),
+    (StructuredDataClassifier, {})
 ]
 
 results = []

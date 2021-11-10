@@ -26,7 +26,9 @@ RUN apt-get update
 # Install Python packages
 ####################################################################################
 
-RUN pip install numpy scikit-learn pandas auto-sklearn
+RUN pip install numpy scikit-learn pandas auto-sklearn tensorflow \
+    git+https://github.com/keras-team/keras-tuner.git \
+    autokeras
 
 ####################################################################################
 # Install Iris within the image
@@ -55,7 +57,7 @@ RUN cd /tmp && \
 #easier if we put them in respective folders by what they do so we can more easily copy
 #them over as well as add and delete fies without any problems 
 ######
-COPY analyzePredictions.py /
+COPY ensemblePredictions.py /
 COPY classificationAccuracy.py /
 #COPY classificationAccuravy.R /
 COPY classify.py /
