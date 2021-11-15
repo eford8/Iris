@@ -1,109 +1,72 @@
 import pandas as pd 
+import sys
+import statistics
 
 #################
 ## This file take the files created from classificationAccuracy.py and finds the avgPredition, majorityVote, and maxProb
 #################
 
-listOfDataTypes = ["iris", "breast", "horse_colic", "Gametes_Epistasis", "magic"]
-resultsFileList = ["results/irisClassifications.tsv", "results/breastClassification.tsv", "results/horse_colicClassification.tsv", "results/Gametes_EpistasisClassification.tsv", "results/magicClassification.tsv"]
-origionalDataFileList = ["data/irisModified.csv", "data/breastModified.csv", "data/horse_colicModified.csv", "data/Gametes_EpistasisModified.csv", "data/magicModified.csv"]
+resultsFile = 'results/' + sys.argv[1] + 'Classifications.tsv'
+originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
+outfile = 'results/' + sys.argv[1] + 'EnsemblePredictions.py'
 
-#file created from classificationAccuracy.py
-classificationAccuracy = "results/classificationAccuracy.tsv"
-
-#file to be created after running ensemblePredictions
-outfile = "results/ensemblePredictions.tsv"
-
-
-#make a for loop that does this five times, for each type of data
-for resultsFile in resultsFileList:
-    dataResults = pd.read_csv (resultsFile, sep = '\t')
-    for ogdataFile in origionalDataFileList:
-        ogData = pd.read_csv (ogdataFile)
-
-# break up the tsv file into three different files/dataframes  ######instead of doing this, use a for loop
-#randomForestData = dataResults[0:100] 
-#logisticRegressionData = dataResults[100:200]
-#KNeighborsData = dataResults[200:300]
+dataResults = pd.read_csv (resultsFile, sep = '\t')
+ogData = pd.read_csv (originalDataFile)
 
 listOfClassifiers = ["randomForest", "logisticRegression", "KNeighbors"]
-
-#for classifier in listOfClassifiers:
-#    for row in dataResults:
-#        if row.whatever == classifier:
-#            then.......
-
+elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 
 def avgPredition():
-    print("This function takes the three preditions from each classifier and finds the avg.")
+    ### you can make predictions based on the origional row number
     list = []
-    for x in range(0, 100):
-        preditionOne = randomForestData.iloc[x, 2]
-        preditionTwo = logisticRegressionData.iloc[x, 2]
-        preditionThree = KNeighborsData.iloc[x, 2]
-        avg = (preditionOne + preditionTwo + preditionThree) / 3
-        list.append(avg)
+    for x in range(elementsPerClassifier) :
+        rowNum = dataResults.iloc[x, 0]
+        iteration = dataResults.iloc[x, 4]
+        predictions = []
+        for i in range(len(dataResults)):
+            row = dataResults.iloc[i]
+            if(str(row['OriginalRow']) == str(rowNum)) : # change to orininal
+                if(str(row['Iteration']) == str(iteration)) :
+                    predictions.append(row['PredictionScore'])          
+        list.append(statistics.mean(predictions))
     return list
 
 
 def majorityVote():
-    #majoirty vote = if two or more says it is the class
-    #2/3 prob for veriscolor
-    #3/3 prob or 0/3 = 0 versicolor
-    print("This function find the majority vote.")
     list = []
-    for x in range(0, 100):
-        preditionOne = randomForestData.iloc[x, 3]
-        preditionTwo = logisticRegressionData.iloc[x, 3]
-        preditionThree = KNeighborsData.iloc[x, 3]
-        count = 0 
-        if preditionOne == "Iris-versicolor":
-            count += 1
-        if preditionTwo == "Iris-versicolor":
-            count += 1
-        if preditionThree == "Iris-versicolor":
-            count += 1
-
-        majority = count /3
-        #print("The majority vote is: " + str(count)  + "/3")
-        list.append(majority)
+    for x in range(elementsPerClassifier) :
+        rowNum = dataResults.iloc[x, 0]
+        iteration = dataResults.iloc[x, 4]
+        predictions = []
+        for i in range(len(dataResults)):
+            row = dataResults.iloc[i]
+            if(str(row['OriginalRow']) == str(rowNum)) :
+                if(str(row['Iteration']) == str(iteration)) :
+                    if(row['PredictionScore'] >= 0.5) :
+                        predictions.append(1)
+                    else :
+                        predictions.append(0)
+        list.append(statistics.mode(predictions))
     return list
 
 
 def maxProb():
-    print("This function find which classifier has the highest prob.")
     list = []
-    for x in range(0, 100):
-        preditionOne = randomForestData.iloc[x, 2]
-        preditionTwo = logisticRegressionData.iloc[x, 2]
-        preditionThree = KNeighborsData.iloc[x, 2]
-
-        #find the greatest distance away from point five
-        #find the aboulste value of # - 0.5
-        #ex: 09 - 05 = 04
-        #ex: 01 - 05  = 04
-
-        preditionOne = abs(preditionOne - 0.5)
-        preditionTwo = abs(preditionTwo - 0.5)
-        preditionThree = abs(preditionThree - 0.5)
-
-
-        if preditionOne > preditionTwo:
-            if preditionOne > preditionThree:
-                highestPredition = randomForestData.iloc[x, 2]
-            else:
-                highestPredition = KNeighborsData.iloc[x, 2]
-        if preditionTwo > preditionOne:
-            if preditionTwo > preditionThree:
-                highestPredition = logisticRegressionData.iloc[x, 2]
-            else:
-                highestPredition = KNeighborsData.iloc[x, 2]
-
-
-        #print("The classifier with the highest prediction is: " + highestPredition)
-        list.append(highestPredition)
-    return(list)
+    for x in range(elementsPerClassifier) :
+        rowNum = dataResults.iloc[x, 0]
+        iteration = dataResults.iloc[x, 4]
+        predictions = []
+        for i in range(len(dataResults)):
+            row = dataResults.iloc[i]
+            if(str(row['OriginalRow']) == str(rowNum)) :
+                if(str(row['Iteration']) == str(iteration)) :
+                    predictions.append(row['PredictionScore'])
+        predictionEdits = [abs(val - 0.5) for val in predictions]
+        maxVal = max(predictionEdits)
+        maxIndex = predictionEdits.index(maxVal)
+        list.append(predictions[maxIndex])
+    return list
 
 
 listavg = avgPredition()
@@ -112,8 +75,6 @@ listmax = maxProb()
 
 #create a tsv file
 with open(outfile, "w") as tsvFile:
-    tsvFile.write("OrigionalRow\tClass\tAvgPredition\tMajorityVote\tMaxProb\n")
-    for x in range(0, 100):
-        tsvFile.write(str(dataResults.iloc[x, 0]) + '\t' + str(ogData["class"].iloc[dataResults.iloc[x, 0]]) + "\t" +  str(listavg[x]) + '\t' + str(listmajority[x]) + '\t' + str(listmax[x]) + '\n')
-
-
+    tsvFile.write("OriginalRow\tTarget\tIteration\tAvgPredition\tMajorityVote\tMaxProb\n")
+    for x in range(elementsPerClassifier) :
+        tsvFile.write(str(dataResults.iloc[x, 0]) + '\t' + str(ogData["target"].iloc[dataResults.iloc[x, 0]]) + '\t' + str(dataResults.iloc[x, 4]) + "\t" +  str(listavg[x]) + '\t' + str(listmajority[x]) + '\t' + str(listmax[x]) + '\n')
