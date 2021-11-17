@@ -41,7 +41,6 @@ def irisDataInitialization () :
 
 irisDataInitialization()
 
-
 ########## general function for initialization ###########
 def generalInitialization(dataType) :
     #Read in the Date from the tsv file using Pandas 

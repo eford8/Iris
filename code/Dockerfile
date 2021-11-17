@@ -58,7 +58,7 @@ RUN cd /tmp && \
 #them over as well as add and delete fies without any problems 
 ######
 COPY ensemblePredictions.py /
-COPY classificationAccuracy.py /
+COPY metrics.py /
 #COPY classificationAccuravy.R /
 COPY classify.py /
 COPY initialization.py /
