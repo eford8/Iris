@@ -106,7 +106,7 @@ print("scores")
 print(results)
 ## results are [classifier, iteration number, og row number, probability not virginica, probability virginica, roc score]
 
-#Modify the script so that it creates a TSV file that is clearly named (indicates that it's for the iris data). 
+
 def createTSV(results):
     print("createTSV function called")
     print(outfile)
@@ -127,9 +127,26 @@ def createTSV(results):
                 predict = class2
     
             tsvFile.write('\t'.join([str(int(prediction[2])), str(prediction[0]), str(int(prediction[1])), str(target), str(prediction[4]), predict]) + '\n')
-            #tsvFile.write(int(results[2]) + '\t' + results[0] + '\t' + results[4] + '\t' + "prediction" + '\t' + int(results[1]) + '\n')
-        #example: 3 RandomForest 0.6    Versicolor  3
-        #example: 5 LogReg 0.2 Virgincia 1
-
+            
 #Calling the createTSV function
 createTSV(results)
+
+
+##New TSV file 
+def createNEWTSV(results):
+    print("Creating TSV file...")
+    with open(outfile, "w") as tsvFile:
+        print("writing to " + outfile)
+        tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+
+        for prediction in results:
+            predict = ""
+            target = predictColumn[int(prediction[2])]
+            if(prediction[4] >= 0.5) :
+                predict = class1
+            else:
+                predict = class2
+
+            tsvFile.write('\t'.join([str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
+
+createNEWTSV(outfile)

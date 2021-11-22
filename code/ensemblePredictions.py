@@ -85,3 +85,24 @@ with open(outfile, "w") as tsvFile:
     for x in range(elementsPerClassifier) :
         row = dataResults.iloc[x]
         tsvFile.write(str(row["OriginalRow"]) + '\t' + str(row["Target"]) + '\t' + str(row["Iteration"]) + "\t" +  str(listavg[x]) + '\t' + str(listmajority[x]) + '\t' + str(listmax[x]) + '\n')
+
+
+##New TSV file 
+
+print("Creating TSV file...")
+with open(outfile, "w") as tsvFile:
+    print("writing to " + outfile)
+    tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+    ##PredictionScore can be the .85 or whatever the percentage is
+    ##Prediction can be a 1 or a 0 (or 2) for what the prediction would be 
+    ## Fix the Prediction part 
+    for x in range(elementsPerClassifier) :
+        row = dataResults.iloc[x]
+        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+ str(listavg[x]) +'\n')
+        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+ str(listmajority[x]) +'\n')
+        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+ str(listmax[x]) +'\n')
+        
+    
+
+   
+
