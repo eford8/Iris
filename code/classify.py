@@ -14,7 +14,7 @@ import csv
 import os
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outfile = "/results/" + sys.argv[1] + "Classifications.tsv"
+outfile = "/results/" + sys.argv[1] + "ClassificationsAutoSklearn.tsv"
 class1 = sys.argv[2]
 class2 = sys.argv[3]
 
@@ -77,8 +77,11 @@ def cross_validate(df, labels, clf) :
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
     (LogisticRegression, {"random_state" : 0}),
-    (KNeighborsClassifier, {})#,
-    #(AutoSklearnClassifier, {}),
+    (KNeighborsClassifier, {}),
+    (AutoSklearnClassifier, {"time_left_for_this_task":5*60, 
+                                "per_run_time_limit":30,
+                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+                                "include":"{\'classifier\': [\"random_forest\", \"k_nearest_neighbors.py\"]}")#,
     #(StructuredDataClassifier, {})
 ]
 
@@ -129,7 +132,7 @@ def createTSV(results):
             tsvFile.write('\t'.join([str(int(prediction[2])), str(prediction[0]), str(int(prediction[1])), str(target), str(prediction[4]), predict]) + '\n')
             
 #Calling the createTSV function
-createTSV(results)
+#createTSV(results)
 
 
 ##New TSV file 
@@ -149,4 +152,4 @@ def createNEWTSV(results):
 
             tsvFile.write('\t'.join([str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
 
-createNEWTSV(outfile)
+createNEWTSV(results)
