@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sklearn
 from autosklearn.classification import AutoSklearnClassifier ## install auto-sklearn
+from deslib.dcs.lca import LCA # for now we are doing dynamic classifier selection (DCS)
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -14,7 +15,7 @@ import csv
 import os
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outfile = "/results/" + sys.argv[1] + "ClassificationsAutoSklearn.tsv"
+outfile = "/results/" + sys.argv[1] + "ClassificationsTest.tsv"
 class1 = sys.argv[2]
 class2 = sys.argv[3]
 
@@ -81,8 +82,13 @@ CLASSIFIERS = [
     (AutoSklearnClassifier, {"time_left_for_this_task":5*60, 
                                 "per_run_time_limit":30,
                                 "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "include":"{\'classifier\': [\"random_forest\", \"k_nearest_neighbors.py\"]}")#,
-    #(StructuredDataClassifier, {})
+                                "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
+                                }),
+   # (StructuredDataClassifier, {})
+   (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
+            "random_state": 0
+            })
+   
 ]
 
 results = []
