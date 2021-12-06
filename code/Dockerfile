@@ -26,9 +26,11 @@ RUN apt-get update
 # Install Python packages
 ####################################################################################
 
-RUN pip install numpy scikit-learn pandas auto-sklearn tensorflow \
+RUN pip install numpy scikit-learn pandas auto-sklearn==0.14.2 tensorflow \
+    deslib==0.3 \ 
     git+https://github.com/keras-team/keras-tuner.git \
     autokeras
+RUN pip list
 
 ####################################################################################
 # Install Iris within the image
