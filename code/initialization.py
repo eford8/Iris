@@ -5,13 +5,14 @@ import pandas as pd
 ## Takes the original data and create a modified csv file 
 
 def irisDataInitialization () :
-
     #Read in the Date from the csv file using Pandas 
     print("Initializing Iris Data\n")
+
     fileName = "data/iris.csv"
     df = pd.read_csv(fileName)
-    list_of_column_names = list(df.columns)
-    print('List of column names : ',list_of_column_names)
+    columnNames = list(df.columns)
+
+    print('List of column names : ', columnNames)
     print(df)
 
     #Modify the script so that it only includes flowers from the versicolor and virginica (and the header line). 
@@ -32,7 +33,7 @@ def irisDataInitialization () :
     newdf["target"] = target
     del newdf['class']
     
-    new_list_of_column_names = list(newdf.columns)
+    newColumnNames = list(newdf.columns)
     #sepallength, sepalwidth, petallength, petalwidth, target 
 
     print(newdf.head())
@@ -42,13 +43,15 @@ def irisDataInitialization () :
 irisDataInitialization()
 
 ########## general function for initialization ###########
+
 def generalInitialization(dataType) :
     #Read in the Date from the tsv file using Pandas 
     print("Initializing " + dataType + "\n")
+
     fileName = "data/" + dataType + ".tsv"
     df = pd.read_csv(fileName, sep='\t', header=0) #dataframe
-    list_of_column_names = list(df.columns)
-    #print('List of column names : ', list_of_column_names)
+
+    columnNames = list(df.columns)
     print(df.head())
 
     #Create a modified csv file for the modified data
