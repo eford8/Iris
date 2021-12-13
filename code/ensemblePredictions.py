@@ -36,17 +36,17 @@ def combinedFunction ():
                     avgpredictions.append(row['PredictionScore'])
                     maxpredictions.append(row['PredictionScore'])  
                     majoritypredictions.append(row['PredictionScore'])
-                    ##if(row['PredictionScore'] >= 0.5) :
-                    ##    majoritypredictions.append(class1)
-                    ##else :
-                    ##    majoritypredictions.append(class2)
+                    if(row['PredictionScore'] >= 0.5) :
+                        majoritypredictions.append(class1)
+                    else :
+                        majoritypredictions.append(class2)
 
         predictionEdits = [abs(val - 0.5) for val in maxpredictions]
         maxVal = max(predictionEdits)
         maxIndex = predictionEdits.index(maxVal)
 
         listmax.append(maxpredictions[maxIndex])
-        listmajority.append(statistics.mode(majoritypredictions)) 
+        listmajority.append(statistics.mean(majoritypredictions)) 
         listavg.append(statistics.mean(avgpredictions))
 
     print("Creating TSV file...")
