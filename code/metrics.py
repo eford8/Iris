@@ -30,7 +30,8 @@ def metrics ():
                         "LCA"
                         # "StructuredData"
                         ]
-    #elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
+
+    #FIX ME EMIIIIIIIII                                        
     numIterations = 5 + 1 #fix this later
 
     with open(outFile, "w") as tsvFile:
@@ -43,12 +44,12 @@ def metrics ():
 
                 for i in range(1, len(dataResults)):
                     row = dataResults.iloc[i]
-                    if(str(row['Classifier']) == classifier) : # change to original
-                        if(str(row['Iteration']) == str(iteration)) :
+                    if(str(row['Classifier']) == classifier):
+                        if(str(row['Iteration']) == str(iteration)):
                             y_pred.append(row['Prediction'])
                             y_target.append(row['Target'])
                 
-
+                #Emi, do we need the line of code below this comment? 
                 #if(len(y_target) >0 & len(y_pred) >0) :
                 accuracy = accuracy_score(y_target, y_pred)
                 f1Score = f1_score(y_target, y_pred, average='binary')
