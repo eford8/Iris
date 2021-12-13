@@ -25,8 +25,9 @@ def metrics ():
     ogData = pd.read_csv (originalDataFile)
     listOfClassifiers = ["RandomForest", 
                         "LogisticRegression", 
-                        "KNeighbors"
-                        #, "AutoSklearn", 
+                        "KNeighbors",
+                        "AutoSklearn",
+                        "LCA"
                         # "StructuredData"
                         ]
     #elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))

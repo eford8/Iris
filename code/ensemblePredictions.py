@@ -16,7 +16,7 @@ class2 = sys.argv[3]
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (originalDataFile)
 
-listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors"]
+listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSklearn", "LCA"]
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction ():
