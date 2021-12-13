@@ -2,6 +2,8 @@ import pandas as pd
 import sys
 import statistics
 
+from Iris.code.classify import createTSV
+
 #################
 ## This file take the files created from classificationAccuracy.py and finds the avgPredition, majorityVote, and maxProb
 ## It is a basic emsemble 
@@ -9,9 +11,9 @@ import statistics
 
 resultsFile = 'results/' + sys.argv[1] + 'Classifications.tsv'
 originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-outfile = 'results/' + sys.argv[1] + 'EnsemblePredictions.tsv'
-class1 = sys.argv[2]
-class2 = sys.argv[3]
+outFile = 'results/' + sys.argv[1] + 'EnsemblePredictions.tsv'
+classOne = sys.argv[2]
+classTwo = sys.argv[3]
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (originalDataFile)
@@ -20,38 +22,43 @@ listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSk
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction ():
-    listavg = []
-    listmajority = []
-    listmax = []
+    listAvg = []
+    listMajority = []
+    listMax = []
+
     for x in range(elementsPerClassifier) :
         rowNum = dataResults.iloc[x]["OriginalRow"]
         iteration = dataResults.iloc[x]["Iteration"]
-        avgpredictions = []
-        majoritypredictions = []
-        maxpredictions = []
+        avgPredictions = []
+        majorityPredictions = []
+        maxPredictions = []
+
         for i in range(len(dataResults)):
             row = dataResults.iloc[i]
+
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
-                    avgpredictions.append(row['PredictionScore'])
-                    maxpredictions.append(row['PredictionScore'])  
-                    majoritypredictions.append(row['PredictionScore'])
-                    if(row['PredictionScore'] >= 0.5) :
-                        majoritypredictions.append(class1)
-                    else :
-                        majoritypredictions.append(class2)
 
-        predictionEdits = [abs(val - 0.5) for val in maxpredictions]
+                    avgPredictions.append(row['PredictionScore'])
+                    maxPredictions.append(row['PredictionScore'])  
+                    majorityPredictions.append(row['PredictionScore'])
+
+                    if(row['PredictionScore'] >= 0.5) :
+                        majorityPredictions.append(classOne)
+                    else :
+                        majorityPredictions.append(classTwo)
+
+        predictionEdits = [abs(val - 0.5) for val in maxPredictions]
         maxVal = max(predictionEdits)
         maxIndex = predictionEdits.index(maxVal)
 
-        listmax.append(maxpredictions[maxIndex])
-        listmajority.append(statistics.mean(majoritypredictions)) 
-        listavg.append(statistics.mean(avgpredictions))
+        listMax.append(maxPredictions[maxIndex])
+        listMajority.append(statistics.mean(majorityPredictions)) 
+        listAvg.append(statistics.mean(avgPredictions))
 
     print("Creating TSV file...")
-    with open(outfile, "w") as tsvFile:
-        print("writing to " + outfile)
+    with open(outFile, "w") as tsvFile:
+        print("writing to " + outFile)
         tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
     
         for x in range(elementsPerClassifier) :
@@ -60,125 +67,128 @@ def combinedFunction ():
             avgPreditionClass = 0
             majorityPreditionClass = 0
             maxPreditionClass = 0
+
             #Assigns the class prediction based on the prediction score 
-            if listavg[x] >= 0.5:
-                avgPreditionClass = class1
+            if listAvg[x] >= 0.5:
+                avgPreditionClass = classOne
             else:
-                avgPreditionClass = class2
-            if listmajority[x] >= 0.5:
-                majorityPreditionClass = class1
+                avgPreditionClass = classTwo
+            if listMajority[x] >= 0.5:
+                majorityPreditionClass = classOne
             else:
-                majorityPreditionClass = class2
-            if listmax[x] >= 0.5:
-                maxPreditionClass = class1
+                majorityPreditionClass = classTwo
+            if listMax[x] >= 0.5:
+                maxPreditionClass = classOne
             else:
-                maxPreditionClass = class2
+                maxPreditionClass = classTwo
             
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+str(listavg[x])+'\t'+str(avgPreditionClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+str(listmajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+str(listmax[x])+'\t'+str(maxPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+str(listAvg[x])+'\t'+str(avgPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
         
     
-
+# Code to find each individual ensemble approach 
 def avgPredition():
-    ### you can make predictions based on the origional row number
     list = []
+
     for x in range(elementsPerClassifier) :
         rowNum = dataResults.iloc[x]["OriginalRow"]
         iteration = dataResults.iloc[x]["Iteration"]
         predictions = []
+        
         for i in range(len(dataResults)):
             row = dataResults.iloc[i]
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
                     predictions.append(row['PredictionScore']) 
-        #if(len(predictions) > 0) :        
+       
         list.append(statistics.mean(predictions))
+        
     return list
 
 
 def majorityVote():
     list = []
+
     for x in range(elementsPerClassifier) :
         rowNum = dataResults.iloc[x]["OriginalRow"]
         iteration = dataResults.iloc[x]["Iteration"]
         predictions = []
+
         for i in range(len(dataResults)):
             row = dataResults.iloc[i]
             if(str(row['OriginalRow']) == str(rowNum)) :
+
                 if(str(row['Iteration']) == str(iteration)) :
                     if(row['PredictionScore'] >= 0.5) :
-                        predictions.append(class1)
+                        predictions.append(classOne)
                     else :
-                        predictions.append(class2)
-        #if(len(predictions) > 0) :  
+                        predictions.append(classTwo)
+          
         list.append(statistics.mode(predictions))
+
     return list
 
 
 def maxProb():
     list = []
+
     for x in range(elementsPerClassifier) :
         rowNum = dataResults.iloc[x]["OriginalRow"]
         iteration = dataResults.iloc[x]["Iteration"]
         predictions = []
+
         for i in range(len(dataResults)):
             row = dataResults.iloc[i]
+
             if(str(row['OriginalRow']) == str(rowNum)) :
                 if(str(row['Iteration']) == str(iteration)) :
                     predictions.append(row['PredictionScore'])
-        #if(len(predictions) > 0) :  
+        
         predictionEdits = [abs(val - 0.5) for val in predictions]
         maxVal = max(predictionEdits)
         maxIndex = predictionEdits.index(maxVal)
         list.append(predictions[maxIndex])
+
     return list
 
+def createTSVFile () :
+    listavg = avgPredition()
+    listmajority = majorityVote()
+    listmax = maxProb()
 
-#listavg = avgPredition()
-#listmajority = majorityVote()
-#listmax = maxProb()
-
-#This is the old code for creating the tsv file
-#create a tsv file
-#with open(outfile, "w") as tsvFile:
-#    tsvFile.write("OriginalRow\tTarget\tIteration\tAvgPrediction\tMajorityVote\tExtremeProb\n")
-#    for x in range(elementsPerClassifier) :
-#        row = dataResults.iloc[x]
-#        tsvFile.write(str(row["OriginalRow"]) + '\t' + str(row["Target"]) + '\t' + str(row["Iteration"]) + "\t" +  str(listavg[x]) + '\t' + str(listmajority[x]) + '\t' + str(listmax[x]) + '\n')
-
-
-##New TSV file as to how Dr. Piccolo wanted it to be 
-
-#print("Creating TSV file...")
-#with open(outfile, "w") as tsvFile:
-#    print("writing to " + outfile)
-#    tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
-#   
-#    for x in range(elementsPerClassifier) :
-#        row = dataResults.iloc[x]
-#
-#        avgPreditionClass = 0
-#        majorityPreditionClass = 0
-#        maxPreditionClass = 0
-#        #Assigns the class prediction based on the prediction score 
-#        if listavg[x] >= 0.5:
-#            avgPreditionClass = class1
-#        else:
-#            avgPreditionClass = class2
-#        if listmajority[x] >= 0.5:
-#            majorityPreditionClass = class1
-#        else:
-#            majorityPreditionClass = class2
-#        if listmax[x] >= 0.5:
-#            maxPreditionClass = class1
-#        else:
-#            maxPreditionClass = class2
-#        
-#        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+str(listavg[x])+'\t'+str(avgPreditionClass)+'\n')
-#        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+str(listmajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-#        tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+str(listmax[x])+'\t'+str(maxPreditionClass)+'\n')
-        
+    print("Creating TSV file...")
+    with open(outFile, "w") as tsvFile:
+        print("writing to " + outFile)
+        tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
     
+        for x in range(elementsPerClassifier) :
+            row = dataResults.iloc[x]
 
+            avgPreditionClass = 0
+            majorityPreditionClass = 0
+            maxPreditionClass = 0
+
+            #Assigns the class prediction based on the prediction score 
+            if listavg[x] >= 0.5:
+                avgPreditionClass = classOne
+            else:
+                avgPreditionClass = classTwo
+            if listmajority[x] >= 0.5:
+                majorityPreditionClass = classOne
+            else:
+                majorityPreditionClass = classTwo
+            if listmax[x] >= 0.5:
+                maxPreditionClass = classOne
+            else:
+                maxPreditionClass = classTwo
+            
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+str(listavg[x])+'\t'+str(avgPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+str(listmajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+str(listmax[x])+'\t'+str(maxPreditionClass)+'\n')
+            
+#avgPredition()
+#majorityVote()
+#maxProb()        
+#createTSVFile()
  
