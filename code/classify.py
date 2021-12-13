@@ -15,11 +15,11 @@ import csv
 import os
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outfile = "/results/" + sys.argv[1] + "ClassificationsTest.tsv"
-class1 = sys.argv[2]
-class2 = sys.argv[3]
+outFile = "/results/" + sys.argv[1] + "ClassificationsTest.tsv"
+classOne = sys.argv[2]
+classTwo = sys.argv[3]
 
-def cross_validate(df, labels, clf) :
+def crossValidate(df, labels, clf) :
     X = df
     y = labels
     y = y.astype('int')
@@ -34,24 +34,28 @@ def cross_validate(df, labels, clf) :
     sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1) 
 
     iteration = 0
-    ########
-    #this needs to be more available for peole
+    #this needs to be more available for people
     probs = np.array([]).reshape(0,2)
-    auc_roc_scores = []
+    aucRocScores = []
     scores = np.array([]).reshape(0,5)
     
     #autosklearn requires casting from numpy.object_
     X = X.astype(float)
+
     for train_index, test_index in sss.split(X, y):
         iteration += 1
         probabilities = np.ndarray
+
         print("TRAIN:", train_index, "TEST:", test_index)
         print("TRAINING X SET \n",clf, X[train_index])
+
         classifier.fit(X[train_index], y[train_index])
+
         if(classifier == StructuredDataClassifier) :
             probabilities = classifier.predict(X[test_index])
         else : 
             probabilities = classifier.predict_proba(X[test_index])
+
         print(X[test_index])
         print(probs)
         print(probabilities)
@@ -60,7 +64,7 @@ def cross_validate(df, labels, clf) :
 
         #Find the rocaucscore
         rocaucscores = roc_auc_score(y, classifier.predict_proba(X)[:, 1])
-        auc_roc_scores.append(rocaucscores)
+        aucRocScores.append(rocaucscores)
         rows, columns = probabilities.shape
 
         #combine roc_auc score and iteration number to the probabilities 
@@ -70,7 +74,6 @@ def cross_validate(df, labels, clf) :
         combined = np.append(combined, auc, axis=1)
         combined = np.insert(combined, 1, test_index, axis=1)
         scores = np.vstack([scores,combined])
-
     
     #print(scores)
     return scores
@@ -107,55 +110,30 @@ predictColumn = df[ :, -1:].ravel()
 print(predictColumn)
 
 for classifier in CLASSIFIERS:
-    for score in cross_validate(data, predictColumn, classifier):
+    for score in crossValidate(data, predictColumn, classifier):
         classifier_name = str(classifier[0]).split("'")[1].split(".")[-1].replace("Classifier", "")
         results.append([classifier_name, score[0], score[1], score[2], score[3], score[4]])
 
 print("scores")
 print(results)
-## results are [classifier, iteration number, og row number, probability not virginica, probability virginica, roc score]
+
 
 
 def createTSV(results):
-    print("createTSV function called")
-    print(outfile)
-    with open(outfile, "w") as tsvFile:
-        print("writing to " + outfile)
-        tsvFile.write("OriginalRow\tClassifier\tIteration\tTarget\tPredictionScore\tPrediction\n")
-        rownum = 1
-        for prediction in results:
-            # checks probability of versicolor and makes prediction 
-            predict = ""
-
-            target = predictColumn[int(prediction[2])]
-            #print(target)
-            #print("here")
-            if(prediction[4] >= 0.5) :
-                predict = class1
-            else:
-                predict = class2
-    
-            tsvFile.write('\t'.join([str(int(prediction[2])), str(prediction[0]), str(int(prediction[1])), str(target), str(prediction[4]), predict]) + '\n')
-            
-#Calling the createTSV function
-#createTSV(results)
-
-
-##New TSV file 
-def createNEWTSV(results):
     print("Creating TSV file...")
-    with open(outfile, "w") as tsvFile:
-        print("writing to " + outfile)
+    with open(outFile, "w") as tsvFile:
+        print("writing to " + outFile)
         tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
 
         for prediction in results:
             predict = ""
             target = predictColumn[int(prediction[2])]
+            
             if(prediction[4] >= 0.5) :
-                predict = class1
+                predict = classOne
             else:
-                predict = class2
+                predict = classTwo
 
             tsvFile.write('\t'.join([str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
 
-createNEWTSV(results)
+createTSV(results)
