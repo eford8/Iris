@@ -9,8 +9,8 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import average_precision_score
 
 ####################
-## This Python script parses the tsv file created from "classify.py" and calculates various accuracy scorces using
-## sklearn.metrics. It does this for all the algorithms used and for each interation.
+## This Python script parses the tsv file created from "classify.py" and calculates various accuracy scores using
+## sklearn.metrics. It does this for all the algorithms used and for each iteration.
 ## We can see how frequently the predictions from our algorithms coincide with the actual species. 
 ####################
 
