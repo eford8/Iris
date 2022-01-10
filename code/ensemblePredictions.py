@@ -82,9 +82,9 @@ def combinedFunction ():
             else:
                 maxPreditionClass = classTwo
             
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("AvgPrediction")+'\t'+str(listAvg[x])+'\t'+str(avgPreditionClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("MajorityVote")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+ str("BasicEnsemble")+'\t'+str("ExtremeProb")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AvgPrediction")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(avgPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
         
     
 # Code to find each individual ensemble approach 
