@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 import statistics
 
-from Iris.code.classify import createTSV
+#from classify import createTSV
 
 #################
 ## This file take the files created from classificationAccuracy.py and finds the avgPredition, majorityVote, and maxProb

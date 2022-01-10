@@ -44,10 +44,13 @@ def crossValidate(df, labels, clf) :
 
     for train_index, test_index in sss.split(X, y):
         iteration += 1
+        if(iteration > 1) :
+            break
+        print("Iteration: " + str(iteration) + "\n")
         probabilities = np.ndarray
 
-        print("TRAIN:", train_index, "TEST:", test_index)
-        print("TRAINING X SET \n",clf, X[train_index])
+        #print("TRAIN:", train_index, "TEST:", test_index)
+        #print("TRAINING X SET \n",clf, X[train_index])
 
         classifier.fit(X[train_index], y[train_index])
 
@@ -56,9 +59,9 @@ def crossValidate(df, labels, clf) :
         else : 
             probabilities = classifier.predict_proba(X[test_index])
 
-        print(X[test_index])
-        print(probs)
-        print(probabilities)
+        #print(X[test_index])
+        #print(probs)
+        #print(probabilities)
         probs = np.vstack([probs, probabilities])
 
 

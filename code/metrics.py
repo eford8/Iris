@@ -15,24 +15,17 @@ from sklearn.metrics import average_precision_score
 ####################
 
 def metrics ():
-    print("Calculating metrics for " + sys.argv[1] + " dataset\n")
-    resultsFile = 'results/' + sys.argv[1] + 'Classifications.tsv' #the file created from classify.py
+    print("Calculating metrics for " + sys.argv[1] + sys.argv[2] + " dataset\n")
+    resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + '.tsv' #the file created from classify.py
     originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-    outFile = 'results/' + sys.argv[1] + 'Metrics.tsv'
+    outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Metrics.tsv'
     
     dataResults = pd.read_csv(resultsFile, sep = '\t')
     ogData = pd.read_csv(originalDataFile)
 
-    listOfClassifiers = ["RandomForest", 
-                        "LogisticRegression", 
-                        "KNeighbors",
-                        "AutoSklearn",
-                        "LCA"
-                        # "StructuredData"
-                        ]
+    listOfClassifiers = dataResults["Classifier"].unique()
 
-    #FIX ME EMIIIIIIIII                                        
-    numIterations = 5 + 1 #fix this later
+    numIterations = dataResults["Iteration"].max() + 1
 
     with open(outFile, "w") as tsvFile:
         tsvFile.write("Classifier\tIteration\tAccuracy\tf1_score\tf1_weighted\taverage_precision\troc_auc\tprecision\trecall\tthresholds\n")
@@ -49,8 +42,6 @@ def metrics ():
                             y_pred.append(row['Prediction'])
                             y_target.append(row['Target'])
                 
-                #Emi, do we need the line of code below this comment? 
-                #if(len(y_target) >0 & len(y_pred) >0) :
                 accuracy = accuracy_score(y_target, y_pred)
                 f1Score = f1_score(y_target, y_pred, average='binary')
                 f1Weighted = f1_score(y_target, y_pred, average='weighted')
@@ -62,4 +53,3 @@ def metrics ():
                 tsvFile.write('\t'.join([classifier, str(iteration), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
 
 metrics()
-
