@@ -45,9 +45,9 @@ def combinedFunction ():
                     majorityPredictions.append(row['PredictionScore'])
 
                     if(row['PredictionScore'] >= 0.5) :
-                        majorityPredictions.append(classOne)
+                        majorityPredictions.append(int(classOne))
                     else :
-                        majorityPredictions.append(classTwo)
+                        majorityPredictions.append(int(classTwo)) 
 
         predictionEdits = [abs(val - 0.5) for val in maxPredictions]
         maxVal = max(predictionEdits)
