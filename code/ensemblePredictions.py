@@ -5,7 +5,7 @@ import statistics
 #from classify import createTSV
 
 #################
-## This file take the files created from classificationAccuracy.py and finds the avgPredition, majorityVote, and maxProb
+## This file take the files created from classify.py and finds the avgPredition, majorityVote, and maxProb
 ## It is a basic emsemble 
 #################
 
@@ -18,7 +18,8 @@ classTwo = sys.argv[3]
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (originalDataFile)
 
-listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSklearn", "LCA"]
+listOfClassifiers = dataResults["Classifier"].unique()
+##listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSklearn", "LCA"]
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction ():
@@ -85,7 +86,8 @@ def combinedFunction ():
             tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AvgPrediction")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(avgPreditionClass)+'\n')
             tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
             tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
-        
+
+combinedFunction()       
     
 # Code to find each individual ensemble approach 
 def avgPredition():
