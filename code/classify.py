@@ -15,7 +15,7 @@ import csv
 import os
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "ClassificationsTest.tsv"
+outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
