@@ -14,6 +14,13 @@ import sys
 import csv
 import os
 
+####################
+## This file takes a modified datafile and tried to predict the different outcomes.
+## It creates a file called "type of data" Classifications.tsv
+##
+####################
+
+
 fileName = "data/" + sys.argv[1] + "Modified.csv"
 outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
 classOne = sys.argv[2]

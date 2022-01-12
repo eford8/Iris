@@ -2,8 +2,6 @@ import pandas as pd
 import sys
 import statistics
 
-#from classify import createTSV
-
 #################
 ## This file take the files created from classify.py and finds the avgPredition, majorityVote, and maxProb
 ## It is a basic emsemble 
@@ -19,7 +17,6 @@ dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (originalDataFile)
 
 listOfClassifiers = dataResults["Classifier"].unique()
-##listOfClassifiers = ["RandomForest", "LogisticRegression", "KNeighbors", "AutoSklearn", "LCA"]
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction ():
