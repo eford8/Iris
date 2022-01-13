@@ -48,7 +48,7 @@ def metrics ():
                 averagePrecision = average_precision_score(y_target, y_pred)
                 rocAucScore = roc_auc_score(y_target, y_pred)
 
-                predictionType = dataResults.iat[1, "PredictionType"]
+                predictionType = dataResults.at[1, "PredictionType"]
                 
                 ### writing the information to the tsv file
                 print("Writing the metrics for " + classifier + " for iteration " + str(iteration))
