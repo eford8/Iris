@@ -57,7 +57,7 @@ def combinedFunction ():
     print("Creating TSV file...")
     with open(outFile, "w") as tsvFile:
         print("writing to " + outFile)
-        tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+        tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
     
         for x in range(elementsPerClassifier) :
             row = dataResults.iloc[x]
@@ -80,8 +80,8 @@ def combinedFunction ():
             else:
                 maxPreditionClass = classTwo
             
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
 combinedFunction()       

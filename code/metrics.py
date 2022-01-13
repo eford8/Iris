@@ -28,7 +28,7 @@ def metrics ():
     numIterations = dataResults["Iteration"].max() + 1
 
     with open(outFile, "w") as tsvFile:
-        tsvFile.write("Classifier\tIteration\tAccuracy\tf1_score\tf1_weighted\taverage_precision\troc_auc\n")
+        tsvFile.write("DataName\tClassifier\tIteration\tAccuracy\tf1_score\tf1_weighted\taverage_precision\troc_auc\n")
 
         for classifier in listOfClassifiers:
             for iteration in range(1, numIterations):
@@ -50,6 +50,6 @@ def metrics ():
 
                 ### writing the information to the tsv file
                 print("Writing the metrics for " + classifier + " for iteration " + str(iteration))
-                tsvFile.write('\t'.join([classifier, str(iteration), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
+                tsvFile.write('\t'.join([str(sys.argv[1]), classifier, str(iteration), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
 
 metrics()
