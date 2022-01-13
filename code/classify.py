@@ -133,7 +133,7 @@ def createTSV(results):
     print("Creating TSV file...")
     with open(outFile, "w") as tsvFile:
         print("writing to " + outFile)
-        tsvFile.write("OriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+        tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
 
         for prediction in results:
             predict = ""
@@ -144,6 +144,6 @@ def createTSV(results):
             else:
                 predict = classTwo
 
-            tsvFile.write('\t'.join([str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
+            tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
 
 createTSV(results)
