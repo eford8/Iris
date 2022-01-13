@@ -3,7 +3,7 @@ import sys
 import statistics
 
 #################
-## This file take the files created from classify.py and finds the avgPredition, majorityVote, and maxProb
+## This file take the files created from classify.py and finds the averageProb, majorityVote, and maxProb
 ## It is a basic emsemble 
 #################
 
@@ -27,7 +27,7 @@ def combinedFunction ():
     for x in range(elementsPerClassifier) :
         rowNum = dataResults.iloc[x]["OriginalRow"]
         iteration = dataResults.iloc[x]["Iteration"]
-        avgPredictions = []
+        averageProb = []
         majorityPredictions = []
         maxPredictions = []
 
@@ -37,7 +37,7 @@ def combinedFunction ():
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
 
-                    avgPredictions.append(row['PredictionScore'])
+                    averageProb.append(row['PredictionScore'])
                     maxPredictions.append(row['PredictionScore'])  
                     majorityPredictions.append(row['PredictionScore'])
 
@@ -52,7 +52,7 @@ def combinedFunction ():
 
         listMax.append(maxPredictions[maxIndex])
         listMajority.append(statistics.mean(majorityPredictions)) 
-        listAvg.append(statistics.mean(avgPredictions))
+        listAvg.append(statistics.mean(averageProb))
 
     print("Creating TSV file...")
     with open(outFile, "w") as tsvFile:
@@ -62,15 +62,15 @@ def combinedFunction ():
         for x in range(elementsPerClassifier) :
             row = dataResults.iloc[x]
 
-            avgPreditionClass = 0
+            averageProbClass = 0
             majorityPreditionClass = 0
             maxPreditionClass = 0
 
             #Assigns the class prediction based on the prediction score 
             if listAvg[x] >= 0.5:
-                avgPreditionClass = classOne
+                averageProbClass = classOne
             else:
-                avgPreditionClass = classTwo
+                averageProbClass = classTwo
             if listMajority[x] >= 0.5:
                 majorityPreditionClass = classOne
             else:
@@ -80,7 +80,7 @@ def combinedFunction ():
             else:
                 maxPreditionClass = classTwo
             
-            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AvgPrediction")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(avgPreditionClass)+'\n')
+            tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
             tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
             tsvFile.write(str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
