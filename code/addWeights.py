@@ -3,8 +3,6 @@ import numpy as np
 import sys
 import statistics
 
-from Iris.code.metrics import metrics ##Emi help, i think we have a ghost. I did not write this but it showed up.
-
 ####################
 ## Purpose of this python script is to parse the file created from the metrics.py file.
 ## After that, it calculates which classifiers perform the best.
@@ -16,16 +14,11 @@ from Iris.code.metrics import metrics ##Emi help, i think we have a ghost. I did
 ## Average the interations
 ## Finding the highest score? The lowest score? 
 ## How will the scores add up to 100% or to One? 
-##
 ## What if we just look at the best performing classifier for each thing? 
 ####################
 
 #the file header created from the metrics.py file 
 #tsvFile.write("DataName\tClassifier\tIteration\tPredictionType\tAccuracy\tf1_score\tf1_weighted\taverage_precision\troc_auc\n")
-
-## What does all.sh look like? 
-#python addWeights.py "iris" "Classifications"
-
 
 print("Calculating weights for the " + sys.argv[1] + " dataset... \n")
 
@@ -39,15 +32,21 @@ numIterations = metricsDF["Iteration"].max()
 ## Average the interations
 
 listOfClassifiers = metricsDF["Classifier"].unique()
-listOfMetricValues = ["Accuracy", "f1_score", "f1_weighted", "average_precision", "roc_auc" ]
+listOfMetricValues = ["Accuracy", "f1_score", "f1_weighted", "average_precision", "roc_auc"]  
 
 avgInterationsDict = {}  ##Classifier : [List of 5 numbers with them avergaed ]
 avgList = []
 
 ## reads the classifiers and for each classifier averages the interations. 
 for classifier in listOfClassifiers: ## RandomForest
+    print(classifier) 
     for metricsType in listOfMetricValues: ## "Accuracy"
+        print(metricsType)
         calculateAvg = []
+
+        ##mini experimentation 
+        print(metricsDF["Classifier"]) 
+
 
         if metricsDF["Classifier"] == classifier:
             if metricsDF[classifier]  == metricsType:
