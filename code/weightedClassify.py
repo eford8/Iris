@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import roc_auc_score
 from autokeras import StructuredDataClassifier
 import random
@@ -22,7 +23,7 @@ import os
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "WeightedClassifications.tsv"
+outFile = "/results/" + sys.argv[1] + "WeightedClassificationsTesting.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
@@ -38,9 +39,9 @@ def crossValidate(df, labels, clf) :
     if "random_state" in params:
         params["random_state"] = 1
     classifier = clf[0](**params)
-    sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1)
-    print(sss)
-    sys.exit()
+    # sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1) 
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.20)
 
     iteration = 0
     #this needs to be more available for people
@@ -52,49 +53,73 @@ def crossValidate(df, labels, clf) :
     #autosklearn requires casting from numpy.object_
     X = X.astype(float)
 
-    for train_index, test_index in sss.split(X, y):
-        iteration += 1
-        if(iteration > 5) :
-            break
+    skf = StratifiedKFold(n_splits = 5, shuffle = True, random_state = 2)
 
-        ### for every classifier
-        ###split again
-        subsss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1)
-        subiter = 0
+    for train_index, test_index in skf.split(X_train, y_train):
+
         subprobs = np.array([]).reshape(0,2)
         subscores = np.array([]).reshape(0,5)
         subaucRocScores = []
 
 
-        ##subX and suby
-        subX = X[train_index]
-        suby = y[train_index]
-        for sub_train_index, sub_test_index in subsss.split(X[train_index], y[train_index]):
-            subiter +=1
-            if(subiter > 3) :
-                break
-            print("Sub-iteration: " + str(subiter) + "\n")
-            subprobabilities = np.ndarray
+        classifier.fit(X[train_index], y[train_index])
+        if(classifier == StructuredDataClassifier) :
+            subprobabilities = classifier.predict(X[test_index])
+        else :
+            subprobabilities = classifier.predict_proba(X[test_index])
+
+        #print(X[test_index])
+        #print(subprobs)
+        #print(subprobabilities)
+        subprobs = np.vstack([subprobs, subprobabilities])
+        subrocaucscores = roc_auc_score(y[test_index], classifier.predict_proba(X[test_index])[:,1])
+        print(subrocaucscores)
+        subaucRocScores.append(subrocaucscores)
+
+
+
+    # for train_index, test_index in sss.split(X, y):
+    #     iteration += 1
+    #     if(iteration > 5) :
+    #         break
+
+    #     ### for every classifier
+    #     ###split again
+    #     subsss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1)
+    #     subiter = 0
+    #     subprobs = np.array([]).reshape(0,2)
+    #     subscores = np.array([]).reshape(0,5)
+    #     subaucRocScores = []
+
+
+    #     ##subX and suby
+    #     subX = X[train_index]
+    #     suby = y[train_index]
+    #     for sub_train_index, sub_test_index in subsss.split(X[train_index], y[train_index]):
+    #         subiter +=1
+    #         if(subiter > 3) :
+    #             break
+    #         print("Sub-iteration: " + str(subiter) + "\n")
+    #         subprobabilities = np.ndarray
             
-            classifier.fit(subX[sub_train_index], suby[sub_train_index])
-            if(classifier == StructuredDataClassifier) :
-                subprobabilities = classifier.predict(subX[sub_test_index])
-            else :
-                subprobabilities = classifier.predict_proba(subX[sub_test_index])
+    #         classifier.fit(subX[sub_train_index], suby[sub_train_index])
+    #         if(classifier == StructuredDataClassifier) :
+    #             subprobabilities = classifier.predict(subX[sub_test_index])
+    #         else :
+    #             subprobabilities = classifier.predict_proba(subX[sub_test_index])
 
-            print(subX[sub_test_index])
-            print(subprobs)
-            print(subprobabilities)
-            subprobs = np.vstack([subprobs, subprobabilities])
+    #         print(subX[sub_test_index])
+    #         print(subprobs)
+    #         print(subprobabilities)
+    #         subprobs = np.vstack([subprobs, subprobabilities])
 
-            subrocaucscores = roc_auc_score(suby, classifier.predict_proba(subX)[:,1])
-            subaucRocScores.append(subrocaucscores)
+    #         subrocaucscores = roc_auc_score(suby, classifier.predict_proba(subX)[:,1])
+    #         subaucRocScores.append(subrocaucscores)
 
-        print(subaucRocScores)
+    #     print(subaucRocScores)
         subAverage = np.mean(subaucRocScores)
-        averageSubRoc.append(subAverage)
-        print(averageSubRoc)
-        #sys.exit()
+    #     averageSubRoc.append(subAverage)
+    #     print(averageSubRoc)
 
 
 
@@ -104,31 +129,17 @@ def crossValidate(df, labels, clf) :
         ##find the average for each classifier
         ##use that as the weight
 
-        #calculate the score? off of the weights
-
-        #print("Classifier: " + str(clf[0]))
-        #print("Iteration: " + str(iteration) + "\n")
         probabilities = np.ndarray
 
-        #print("TRAIN:", train_index, "TEST:", test_index)
-        #print("TRAINING X SET \n",clf, X[train_index])
-
-        classifier.fit(X[train_index], y[train_index])
+        # classifier.fit(X[train_index], y[train_index])
 
         if(classifier == StructuredDataClassifier) :
             probabilities = classifier.predict(X[test_index])
         else : 
             probabilities = classifier.predict_proba(X[test_index])
 
-        #print(X[test_index])
-        #print(probs)
-        #print(probabilities)
+    
         probs = np.vstack([probs, probabilities])
-
-        #print("Iteration: " + str(iteration))
-        #print("SubIteration: " + str(subiter))
-        #print(probs)
-        print("")
 
 
         #Find the rocaucscore
@@ -144,9 +155,8 @@ def crossValidate(df, labels, clf) :
         combined = np.insert(combined, 1, test_index, axis=1)
         scores = np.vstack([scores,combined])
     
-    print(scores)
-    print(np.mean(averageSubRoc))
-    return [(scores, np.mean(averageSubRoc))]
+
+    return [(scores, subAverage)]
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
@@ -170,18 +180,14 @@ random.seed(1)
 
 df = pd.read_csv(fileName).to_numpy()
 
-# gets the data and seperates it from the labels
-# if (sys.argv[1] == "iris") :
-#     data = df[:, :3]
-#     predictColumn = df[:, 5]
-# else :
 data = df[:, :-1]
 predictColumn = df[ :, -1:].ravel()
 
-print(predictColumn)
+#print(predictColumn)
 
 for classifier in CLASSIFIERS:
     for scoreweight in crossValidate(data, predictColumn, classifier):
+        print("SCORES AND WEIGHT")
         print(scoreweight)
         scores = scoreweight[0]
         weight = scoreweight[1]
@@ -190,9 +196,9 @@ for classifier in CLASSIFIERS:
             results.append([classifier_name, score[0], score[1], score[2], score[3]*weight, score[4]])
             weights.append([classifier_name, weight])
 
-print("scores")
-print(results)
-print(weights)
+#print("scores")
+#print(results)
+#print(weights)
 
 def createTSV(results):
     print("Creating TSV file...")
