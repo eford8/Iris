@@ -530,6 +530,291 @@ Gametes %>%
 
 
 
+#_________________________________________________________________________________________________________________#
 
+library(tidyverse)
+
+Gametes = Gametes_EpistasisClassifications
+
+print(Gametes)
+
+#Graph with three columns for the three basic classifiers 
+Gametes %>%
+  filter(Iteration == "1") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Gametes Epistasis Classifications") +
+  scale_color_brewer(palette = "Dark2")
+
+Gametes %>%
+  filter(Iteration == "1") %>%
+  filter(Classifier == "KNeighbors") %>%
+  filter(OriginalRow <= 100) %>%
+  arrange(Target) %>%
+  ggplot(aes(x = OriginalRow, y= PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  geom_point(aes(x = OriginalRow, y = Target)) +
+  geom_line(aes(x = OriginalRow, y= PredictionScore), color = "red") + 
+  #facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Gametes Epistasis Classifications") +
+  scale_color_brewer(palette = "Dark2")
+
+Gametes %>%
+  filter(Iteration == "1") %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~factor(Target, levels=c('1', '0')), scales = 'free' ) +
+  theme_bw() + 
+  ggtitle("Gametes Epistasis Classifications Seperated by Target") +
+  xlab("Orginal Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Classifier") +
+  scale_color_brewer(palette = "Dark2")
+
+irisEnsemble = irisEnsemblePredictions
+irisWithWeights = irisEnsemblePredictionsWithWeightsTesting
+
+irisClassifications %>%
+  filter(Classifier != "LCA") %>%
+  filter(Classifier != "AutoSklearn") %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~factor(Target, levels=c('1', '0')), scales = 'free' ) +
+  theme_bw() + 
+  ggtitle("Iris Classifications (Step One)") +
+  xlab("Orginal Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Classifier") +
+  scale_color_brewer(palette = "Dark2") #-> StepOne
+
+irisEnsemble %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~factor(Target, levels=c('1', '0')), scales = 'free' ) +
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions (Step Two)") +
+  xlab("Orginal Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Ensemble") +
+  scale_color_brewer(palette = "Dark2") #-> StepTwo
+
+irisWithWeights %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~factor(Target, levels=c('1', '0')), scales = 'free' ) +
+  theme_bw() + 
+  ggtitle("Iris Ensemble with Weights (Step Three)") +
+  xlab("Orginal Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Ensemble 
+  with Weights") +
+  scale_color_brewer(palette = "Dark2") ##-> StepThree
+
+
+
+irisEnsemble %>% 
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+irisWithWeights %>% 
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Iris Ensemble Predictions with Weights") +
+  scale_color_brewer(palette = "Dark2")
+
+irisEnsemble %>% 
+  filter(Classifier == "AvgPrediction") %>%
+  ggplot(aes(x = Target, y= OriginalRow)) + 
+  geom_point() +
+  theme_bw()
+
+irisEnsemble %>% 
+  filter(Classifier == "AvgPrediction") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point() +
+  theme_bw()
+
+irisEnsemble %>% 
+  filter(Classifier == "AvgPrediction") %>%
+  ggplot(aes(x = Prediction, y= OriginalRow)) + 
+  geom_point() +
+  theme_bw()
+
+
+irisEnsemble %>% 
+  filter(Classifier == "AvgPrediction") %>%
+  pivot_longer(c(PredictionScore, Prediction, Target), names_to = "names", values_to = "Pred" ) %>%
+  ggplot(aes(x = Pred, y= OriginalRow)) + 
+  geom_point(aes(color = names)) +
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions for AvgPrediction") +
+  xlab("Predictions") + 
+  ylab("Original Row Number") + 
+  labs(color = "Predication Type") +
+  scale_color_brewer(palette = "Dark2")
+
+
+irisWithWeights %>% 
+  filter(Classifier == "AverageProb") %>%
+  pivot_longer(c(PredictionScore, Prediction, Target), names_to = "names", values_to = "Pred" ) %>%
+  ggplot(aes(x = Pred, y= OriginalRow)) + 
+  geom_point(aes(color = names)) +
+  theme_bw() + 
+  ggtitle("Iris with Weights AverageProb") +
+  xlab("Predictions") + 
+  ylab("Original Row Number") + 
+  labs(color = "Predication Type") +
+  scale_color_brewer(palette = "Dark2")
+
+
+##Second batch of graphs 
+Gametes %>%
+  filter(Iteration == "1") %>%
+  ggplot(aes(x = OriginalRow, y= PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  #facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Gametes Epistasis Classifications") +
+  scale_color_brewer(palette = "Dark2")
+
+
+irisEnsemble %>% 
+  #filter(Iteration == "1") %>%
+  filter(Classifier == "AvgPrediction") %>%
+  arrange(Target) %>%
+  ggplot(aes(x = OriginalRow, y= PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  geom_point(aes(x = OriginalRow, y = Target)) +
+  #geom_line(aes(x = OriginalRow, y= PredictionScore), color = "red") + 
+  #facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(legend.position = "none") +
+  ggtitle("Iris Basic Ensemble") +
+  scale_color_brewer(palette = "Dark2")
+
+irisEnsemble %>% 
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Target) + 
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+
+horse_colic = horse_colicClassifications
+
+horse_colic%>%
+  filter(Iteration == "1") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+horse_colic%>%
+  filter(Iteration == "1") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Target) + 
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+
+horse_colic%>%
+  filter(Iteration == "1") %>%
+  filter(Target == "1") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+horse_colic%>%
+  filter(Iteration == "1") %>%
+  filter(Target == "2") %>%
+  ggplot(aes(x = PredictionScore, y= OriginalRow)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  ggtitle("Iris Ensemble Predictions with Five Iterations") +
+  scale_color_brewer(palette = "Dark2")
+
+##COMEPARING THE METRICS FOR IRIS CLASSIFICATIONS 
+irisMetrics %>% 
+  pivot_longer(Accuracy:roc_auc, names_to = "TypeofMetric", values_to = "Values") %>%
+  ggplot(aes(x = TypeofMetric, y = Values)) + 
+  geom_point(aes(color = Classifier)) + 
+  facet_wrap(~Classifier) + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  scale_color_brewer(palette = "Dark2") + 
+  theme(legend.position = "none") + 
+  ggtitle("Iris Metrics for Five Interations") 
+
+##Graphs for Basic Classification of all datasets
+
+horse_colic%>%
+  filter(Iteration == "1") %>%
+  filter(Classifier != "LCA") %>%
+  filter(Classifier != "AutoSklearn") %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~Target, scales = 'free' ) +
+  theme_bw() + 
+  ggtitle("Horse Colic Classification") +
+  xlab("Original Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Classifier") +
+  scale_color_brewer(palette = "Dark2")
+
+
+magicClassifications %>% 
+  filter(Iteration == "1") %>%
+  filter(OriginalRow <= 1000 | OriginalRow >= 18000) %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~Target, scales = 'free' ) +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  ggtitle("Magic Classification") +
+  xlab("Original Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Classifier") +
+  scale_color_brewer(palette = "Dark2")
+
+breastClassifications %>%
+  filter(Iteration == "1") %>%
+  filter(Classifier != "LCA") %>%
+  filter(Classifier != "AutoSklearn") %>%
+  ggplot(aes(x = OriginalRow, y = PredictionScore)) + 
+  geom_point(aes(color = Classifier)) +
+  facet_grid(~Target, scales = 'free' ) +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  ggtitle("Breast Classification") +
+  xlab("Original Row Number") +
+  ylab("Prediction Score") + 
+  labs(color = "Basic Classifier") +
+  scale_color_brewer(palette = "Dark2")
+
+
+ 
 
 
