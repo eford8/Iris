@@ -16,9 +16,9 @@ from sklearn.metrics import average_precision_score
 
 def metrics ():
     print("Calculating metrics for " + sys.argv[1] + sys.argv[2] + " dataset\n")
-    resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + '.tsv' #the file created from classify.py or from ensemblePredictions.py
+    resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + '_2.tsv' #the file created from classify.py or from ensemblePredictions.py
     originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-    outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Metrics.tsv'
+    outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Metrics_2.tsv'
     
     dataResults = pd.read_csv(resultsFile, sep = '\t')
     ogData = pd.read_csv(originalDataFile)

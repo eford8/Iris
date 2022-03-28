@@ -7,9 +7,9 @@ import statistics
 ## It is a basic emsemble 
 #################
 
-resultsFile = 'results/' + sys.argv[1] + 'Classifications.tsv'
+resultsFile = 'results/' + sys.argv[1] + 'Classifications_2.tsv'
 originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-outFile = 'results/' + sys.argv[1] + 'EnsemblePredictions.tsv'
+outFile = 'results/' + sys.argv[1] + 'EnsemblePredictions_2.tsv'
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
@@ -84,4 +84,4 @@ def combinedFunction ():
             tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
             tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
-combinedFunction()       
+combinedFunction()      

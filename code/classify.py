@@ -22,7 +22,7 @@ import os
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
+outFile = "/results/" + sys.argv[1] + "Classifications_2.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
@@ -90,11 +90,12 @@ def crossValidate(df, labels, clf) :
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
-    (LogisticRegression, {"random_state" : 0}),
-    (KNeighborsClassifier, {}),
+    (LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
+    (KNeighborsClassifier, {"n_neighbors":10}),
     (AutoSklearnClassifier, {"time_left_for_this_task":5*60, 
                                 "per_run_time_limit":30,
                                 "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+                                "memory_limit":None,
                                 "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
                                 }),
    # (StructuredDataClassifier, {})

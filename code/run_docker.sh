@@ -14,8 +14,9 @@ mkdir -p $currentDir/../results
 chmod 777 $currentDir/../results
 
 ls ../
-docker run -i -t --rm \
+#docker run -i -t --rm \
+docker run -d --rm \
   --user $(id -u):$(id -g) \
   -v ${dataDir}:/data \
   -v ${currentDir}/../results:/results \
-  $image
+  $image > /tmp/Emi.log

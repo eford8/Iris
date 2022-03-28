@@ -7,7 +7,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_auc_score
 from autokeras import StructuredDataClassifier
 import random
@@ -23,7 +24,7 @@ import os
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "WeightedClassificationsTesting.tsv"
+outFile = "/results/" + sys.argv[1] + "WeightedClassifications_2.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
@@ -68,12 +69,11 @@ def crossValidate(df, labels, clf) :
         else :
             subprobabilities = classifier.predict_proba(X[test_index])
 
-        #print(X[test_index])
-        #print(subprobs)
-        #print(subprobabilities)
+        print(X[test_index])
+        print(subprobs)
+        print(subprobabilities)
         subprobs = np.vstack([subprobs, subprobabilities])
         subrocaucscores = roc_auc_score(y[test_index], classifier.predict_proba(X[test_index])[:,1])
-        print(subrocaucscores)
         subaucRocScores.append(subrocaucscores)
 
 
@@ -117,7 +117,7 @@ def crossValidate(df, labels, clf) :
     #         subaucRocScores.append(subrocaucscores)
 
     #     print(subaucRocScores)
-        subAverage = np.mean(subaucRocScores)
+    #     subAverage = np.mean(subaucRocScores)
     #     averageSubRoc.append(subAverage)
     #     print(averageSubRoc)
 
@@ -156,14 +156,14 @@ def crossValidate(df, labels, clf) :
         scores = np.vstack([scores,combined])
     
 
-    return [(scores, subAverage)]
+    return [(scores, np.mean(averageSubRoc))]
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
     (LogisticRegression, {"random_state" : 0}),
-    (KNeighborsClassifier, {}),
-    (AutoSklearnClassifier, {"time_left_for_this_task":30, 
-                                "per_run_time_limit":15,
+    (KNeighborsClassifier, {"n_neighbors":10}),
+    (AutoSklearnClassifier, {"time_left_for_this_task":5*60, 
+                                "per_run_time_limit":45,
                                 "ensemble_size":1, # for now we don't want it to find ensemble algorithms
                                 "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
                                 }),
@@ -183,11 +183,10 @@ df = pd.read_csv(fileName).to_numpy()
 data = df[:, :-1]
 predictColumn = df[ :, -1:].ravel()
 
-#print(predictColumn)
+print(predictColumn)
 
 for classifier in CLASSIFIERS:
     for scoreweight in crossValidate(data, predictColumn, classifier):
-        print("SCORES AND WEIGHT")
         print(scoreweight)
         scores = scoreweight[0]
         weight = scoreweight[1]
@@ -196,9 +195,9 @@ for classifier in CLASSIFIERS:
             results.append([classifier_name, score[0], score[1], score[2], score[3]*weight, score[4]])
             weights.append([classifier_name, weight])
 
-#print("scores")
-#print(results)
-#print(weights)
+print("scores")
+print(results)
+print(weights)
 
 def createTSV(results):
     print("Creating TSV file...")
