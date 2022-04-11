@@ -7,11 +7,11 @@ import statistics
 ## It is a basic emsemble 
 #################
 
-resultsFile = 'results/' + sys.argv[1] + 'Classifications_2.tsv'
+resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications_2.tsv'
 originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-outFile = 'results/' + sys.argv[1] + 'EnsemblePredictions_2.tsv'
-classOne = sys.argv[2]
-classTwo = sys.argv[3]
+outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions_2.tsv'
+classOne = sys.argv[3]
+classTwo = sys.argv[4]
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 ogData = pd.read_csv (originalDataFile)

@@ -3,10 +3,12 @@ import numpy as np
 import sklearn
 from autosklearn.classification import AutoSklearnClassifier ## install auto-sklearn
 from deslib.dcs.lca import LCA # for now we are doing dynamic classifier selection (DCS)
+from deslib.des.meta_des import METADES
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.svm import SVC
 from sklearn.metrics import roc_auc_score
 from autokeras import StructuredDataClassifier
 import random
@@ -90,15 +92,17 @@ def crossValidate(df, labels, clf) :
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
-    (LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
+    #(LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
+    (SVC, {"random_state": 0}),
     (KNeighborsClassifier, {"n_neighbors":10}),
-    (AutoSklearnClassifier, {"time_left_for_this_task":5*60, 
+    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
                                 "per_run_time_limit":30,
                                 "ensemble_size":1, # for now we don't want it to find ensemble algorithms
                                 "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
+                                "include":{'classifier': ["random_forest", "k_nearest_neighbors", "liblinear_svc"]}
                                 }),
    # (StructuredDataClassifier, {})
+   (METADES, {"random_state": 0}),
    (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
             "random_state": 0
             })

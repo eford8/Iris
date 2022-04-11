@@ -65,8 +65,9 @@ COPY metrics.py /
 COPY classify.py /
 COPY initialization.py /
 COPY all.sh /
+COPY entry.sh /
 COPY addWeights.py /
 COPY classifyDuplicate.py / 
 COPY weightedClassify.py /
 
-ENTRYPOINT bash /all.sh
+ENTRYPOINT bash /entry.sh
