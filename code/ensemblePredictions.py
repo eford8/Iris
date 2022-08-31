@@ -7,9 +7,9 @@ import statistics
 ## It is a basic emsemble 
 #################
 
-resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications_2.tsv'
+resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications_3.tsv'
 originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions_2.tsv'
+outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions_3.tsv'
 classOne = sys.argv[3]
 classTwo = sys.argv[4]
 
@@ -80,8 +80,11 @@ def combinedFunction ():
             else:
                 maxPreditionClass = classTwo
             
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+str("BasicEnsemble")+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+str("BasicEnsemble")+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+str("BasicEnsemble")+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+            ensembleType = "BasicEnsemble"
+            if(sys.argv[2] == "Weighted"):
+                ensembleType = "WeightedEnsemble"
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
 combinedFunction()      

@@ -26,9 +26,10 @@ import os
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "WeightedClassifications_2.tsv"
+outFile = "/results/" + sys.argv[1] + "WeightedClassifications_3.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
+randInt = 6
 
 def crossValidate(df, labels, clf) :
     X = df
@@ -44,9 +45,10 @@ def crossValidate(df, labels, clf) :
     classifier = clf[0](**params)
     # sss = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=1) 
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.20)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.20, random_state = randInt)
 
     iteration = 0
+    print("cross validation ", clf[0])
     #this needs to be more available for people
     probs = np.array([]).reshape(0,2)
     aucRocScores = []
@@ -59,24 +61,28 @@ def crossValidate(df, labels, clf) :
     skf = StratifiedKFold(n_splits = 5, shuffle = True, random_state = 2)
 
     for train_index, test_index in skf.split(X_train, y_train):
+        iteration += 1
 
         subprobs = np.array([]).reshape(0,2)
         subscores = np.array([]).reshape(0,5)
         subaucRocScores = []
 
 
+        print(X[train_index])
+        print(y[train_index])
+        print("fitting data")
         classifier.fit(X[train_index], y[train_index])
-        if(classifier == StructuredDataClassifier) :
-            subprobabilities = classifier.predict(X[test_index])
-        else :
-            subprobabilities = classifier.predict_proba(X[test_index])
+#        if(classifier == StructuredDataClassifier) :
+#            subprobabilities = classifier.predict(X[test_index])
+#        else :
+#            subprobabilities = classifier.predict_proba(X[test_index])
 
-        print(X[test_index])
-        print(subprobs)
-        print(subprobabilities)
-        subprobs = np.vstack([subprobs, subprobabilities])
-        subrocaucscores = roc_auc_score(y[test_index], classifier.predict_proba(X[test_index])[:,1])
-        subaucRocScores.append(subrocaucscores)
+#        print(X[test_index])
+#        print(subprobs)
+#        print(subprobabilities)
+#        subprobs = np.vstack([subprobs, subprobabilities])
+#        subrocaucscores = roc_auc_score(y[test_index], classifier.predict_proba(X[test_index])[:,1])
+#        subaucRocScores.append(subrocaucscores)
 
 
 
@@ -132,6 +138,7 @@ def crossValidate(df, labels, clf) :
         ##use that as the weight
 
         probabilities = np.ndarray
+        print("probs")
 
         # classifier.fit(X[train_index], y[train_index])
 
@@ -139,7 +146,8 @@ def crossValidate(df, labels, clf) :
             probabilities = classifier.predict(X[test_index])
         else : 
             probabilities = classifier.predict_proba(X[test_index])
-
+        
+        print("prediction")
     
         probs = np.vstack([probs, probabilities])
 
@@ -148,6 +156,7 @@ def crossValidate(df, labels, clf) :
         rocaucscores = roc_auc_score(y, classifier.predict_proba(X)[:, 1])
         aucRocScores.append(rocaucscores)
         rows, columns = probabilities.shape
+        print("rocScore")
 
         #combine roc_auc score and iteration number to the probabilities 
         auc = np.zeros((rows,1))
@@ -156,20 +165,20 @@ def crossValidate(df, labels, clf) :
         combined = np.append(combined, auc, axis=1)
         combined = np.insert(combined, 1, test_index, axis=1)
         scores = np.vstack([scores,combined])
-    
+        print("combined")
 
-    return [(scores, np.mean(averageSubRoc))]
+    return [(scores, np.mean(auc))]
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
     (LogisticRegression, {"random_state" : 0, "max_iter": 500}),
     (SVC, {"random_state": 0, "probability": True}),
     (KNeighborsClassifier, {"n_neighbors":10}),
-    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
-                                "per_run_time_limit":30,
-                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
-                                }),
+    #(AutoSklearnClassifier, {"time_left_for_this_task":600, 
+    #                            "per_run_time_limit":50,
+    #                            "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+    #                            "include":{'classifier': ["random_forest", "k_nearest_neighbors"]}
+    #                            }),
     #(StructuredDataClassifier, {})
     (METADES, {"random_state": 0}),
    (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
