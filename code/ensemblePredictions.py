@@ -17,16 +17,16 @@ classTwo = sys.argv[2]
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
 #dataResults = dataResults[Classifier in listOfClassifiers]
-ogData = pd.read_csv (originalDataFile)
+#ogData = pd.read_csv (originalDataFile)
 
 #listOfClassifiers = dataResults["Classifier"].unique()
 listOfClassifiers = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]
-dataResults = dataResults[Classifier in listOfClassifiers]
-sys.exit()
+dataResults = dataResults[dataResults.Classifier.isin(listOfClassifiers)]
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction (dataName):
     originalDataFile = 'data/' + dataName + 'Modified.csv'
+    ogData = pd.read_csv (originalDataFile)
     listAvg = []
     listMajority = []
     listMax = []
@@ -96,6 +96,6 @@ def combinedFunction (dataName):
             tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
             tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
-for dataName in dataResults["DataName"].unique()
+for dataName in dataResults["DataName"].unique():
     combinedFunction(dataName)
 

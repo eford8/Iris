@@ -14,6 +14,7 @@
 #python metrics.py "Gametes_Epistasis" "Classifications"
 #python metrics.py "magic" "Classifications"
 
+python ensemblePredictions.py "1" "0"
 #python ensemblePredictions.py "iris" "" "1" "0"
 #python ensemblePredictions.py "breast" "" "1" "0"
 #python ensemblePredictions.py "horse_colic" "" "1" "0"
@@ -35,13 +36,13 @@
 #python ensemblePredictions.py "iris" "Weighted" "1" "0" 
 #python ensemblePredictions.py "breast" "Weighted" "1" "0"
 #python ensemblePredictions.py "horse_colic" "Weighted" "1" "0"
-python ensemblePredictions.py "Gametes_Epistasis" "Weighted" "1" "0"
-python ensemblePredictions.py "magic" "Weighted" "1" "0"
+#python ensemblePredictions.py "Gametes_Epistasis" "Weighted" "1" "0"
+#python ensemblePredictions.py "magic" "Weighted" "1" "0"
 
 #python metrics.py "iris" "WeightedEnsemblePredictions"
 #python metrics.py "breast" "WeightedEnsemblePredictions"
 #python metrics.py "horse_colic" "WeightedEnsemblePredictions"
-python metrics.py "Gametes_Epistasis" "WeightedEnsemblePreditions"
-python metrics.py "magic" "WeightedEnsemblePreditions"
+#python metrics.py "Gametes_Epistasis" "WeightedEnsemblePreditions"
+#python metrics.py "magic" "WeightedEnsemblePreditions"
 
 
