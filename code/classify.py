@@ -53,7 +53,7 @@ def crossValidate(df, labels, clf) :
 
     for train_index, test_index in sss.split(X, y):
         iteration += 1
-        if(iteration > 1) :
+        if(iteration > 5) :
             break
         print("Iteration: " + str(iteration) + "\n")
         probabilities = np.ndarray
@@ -92,8 +92,8 @@ def crossValidate(df, labels, clf) :
 
 CLASSIFIERS = [
     (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
-    #(LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
-    (SVC, {"random_state": 0}),
+    (LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
+    (SVC, {"random_state": 0, "probability": True}),
     (KNeighborsClassifier, {"n_neighbors":10}),
     (AutoSklearnClassifier, {"time_left_for_this_task":60, 
                                 "per_run_time_limit":30,
