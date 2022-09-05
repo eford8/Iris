@@ -7,19 +7,26 @@ import statistics
 ## It is a basic emsemble 
 #################
 
-resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications_3.tsv'
-originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions_3.tsv'
-classOne = sys.argv[3]
-classTwo = sys.argv[4]
+#resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications.tsv'
+resultsFile = 'results/Classifications.tsv'
+#originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
+#outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions.tsv'
+outFile = 'results/Classifications.tsv'
+classOne = sys.argv[1]
+classTwo = sys.argv[2]
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
+#dataResults = dataResults[Classifier in listOfClassifiers]
 ogData = pd.read_csv (originalDataFile)
 
-listOfClassifiers = dataResults["Classifier"].unique()
+#listOfClassifiers = dataResults["Classifier"].unique()
+listOfClassifiers = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]
+dataResults = dataResults[Classifier in listOfClassifiers]
+sys.exit()
 elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
-def combinedFunction ():
+def combinedFunction (dataName):
+    originalDataFile = 'data/' + dataName + 'Modified.csv'
     listAvg = []
     listMajority = []
     listMax = []
@@ -55,10 +62,12 @@ def combinedFunction ():
         listAvg.append(statistics.mean(averageProb))
 
     print("Creating TSV file...")
-    with open(outFile, "w") as tsvFile:
-        print("writing to " + outFile)
-        tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+    if not os.path.exists(outFile):
+        with open(outFile, "w") as tsvFile:
+            print("writing to " + outFile)
+            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
     
+    with open(outFile, 'a') as tsvFile:
         for x in range(elementsPerClassifier) :
             row = dataResults.iloc[x]
 
@@ -81,10 +90,12 @@ def combinedFunction ():
                 maxPreditionClass = classTwo
             
             ensembleType = "BasicEnsemble"
-            if(sys.argv[2] == "Weighted"):
-                ensembleType = "WeightedEnsemble"
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(str(sys.argv[1])+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+            #if(sys.argv[2] == "Weighted"):
+            #    ensembleType = "WeightedEnsemble"
+            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
+            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
-combinedFunction()      
+for dataName in dataResults["DataName"].unique()
+    combinedFunction(dataName)
+
