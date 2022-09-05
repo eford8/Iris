@@ -23,7 +23,8 @@ import os
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
+outFile = "/results/Classifications.tsv"
+#outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 
@@ -131,7 +132,29 @@ for classifier in CLASSIFIERS:
 print("scores")
 print(results)
 
+def appendTSV(results):
+    if(not os.path.exists(outFile)): 
+        with open(outFile, "w") as tsvFile:
+            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+    
+    with open(outFile, "a") as tsvFile:
+        for prediction in results:
+            predict = ""
+            target = predictColumn[int(prediction[2])]
 
+            if(prediction[4] >= 0.5):
+                predict = classOne
+            else:
+                predict = classTwo
+
+            predictionType = ""
+            basic = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]    
+            if prediction[0] in basic:
+                predictionType = "Basic"
+            else:
+                predictionType = "Ensemble"
+
+            tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str(predictionType), str(prediction[4]), predict]) + '\n')
 
 def createTSV(results):
     print("Creating TSV file...")
@@ -150,4 +173,5 @@ def createTSV(results):
 
             tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str("Basic"), str(prediction[4]), predict]) + '\n')
 
-createTSV(results)
+#createTSV(results)
+appendTSV(results)
