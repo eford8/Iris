@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np
 import sys
+import os
 import csv
 import sklearn
 from sklearn.metrics import accuracy_score
@@ -60,7 +61,7 @@ def metrics (dataName):
                 
                 ### writing the information to the tsv file
                 print("Writing the metrics for " + classifier + " for iteration " + str(iteration))
-                tsvFile.append('\t'.join([dataName, classifier, str(iteration), str(predictionType), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
+                tsvFile.write('\t'.join([dataName, classifier, str(iteration), str(predictionType), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
 
 
 for dataName in dataResults["DataName"].unique():
