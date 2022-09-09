@@ -1,6 +1,7 @@
 import pandas as pd 
 import sys
 import statistics
+import os
 
 #################
 ## This file take the files created from classify.py and finds the averageProb, majorityVote, and maxProb
@@ -22,24 +23,26 @@ dataResults = pd.read_csv (resultsFile, sep = '\t')
 #listOfClassifiers = dataResults["Classifier"].unique()
 listOfClassifiers = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]
 dataResults = dataResults[dataResults.Classifier.isin(listOfClassifiers)]
-elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
+#elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
 
 def combinedFunction (dataName):
     originalDataFile = 'data/' + dataName + 'Modified.csv'
     ogData = pd.read_csv (originalDataFile)
+    singleData = dataResults[dataResults["DataName"] == dataName]
+    elementsPerClassifier = int(len(singleData)/len(listOfClassifiers))
     listAvg = []
     listMajority = []
     listMax = []
 
     for x in range(elementsPerClassifier) :
-        rowNum = dataResults.iloc[x]["OriginalRow"]
-        iteration = dataResults.iloc[x]["Iteration"]
+        rowNum = singleData.iloc[x]["OriginalRow"]
+        iteration = singleData.iloc[x]["Iteration"]
         averageProb = []
         majorityPredictions = []
         maxPredictions = []
 
-        for i in range(len(dataResults)):
-            row = dataResults.iloc[i]
+        for i in range(len(singleData)):
+            row = singleData.iloc[i]
 
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
@@ -69,7 +72,7 @@ def combinedFunction (dataName):
     
     with open(outFile, 'a') as tsvFile:
         for x in range(elementsPerClassifier) :
-            row = dataResults.iloc[x]
+            row = singleData.iloc[x]
 
             averageProbClass = 0
             majorityPreditionClass = 0
@@ -92,9 +95,9 @@ def combinedFunction (dataName):
             ensembleType = "BasicEnsemble"
             #if(sys.argv[2] == "Weighted"):
             #    ensembleType = "WeightedEnsemble"
-            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
-            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.append(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
 for dataName in dataResults["DataName"].unique():
     combinedFunction(dataName)
