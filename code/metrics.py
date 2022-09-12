@@ -22,6 +22,7 @@ dataResults = pd.read_csv(resultsFile, sep = '\t')
 
 def metrics (dataName):
     filteredResults = dataResults[dataResults["DataName"] == dataName]
+    print(filteredResults.head(6))
     print("Calculating metrics for " + dataName + " dataset\n")
     #resultsFile = 'results/Classifications.tsv'#sys.argv[1] + sys.argv[2] + '_3.tsv' #the file created from classify.py or from ensemblePredictions.py
     originalDataFile = 'data/' + dataName + 'Modified.csv'
@@ -67,5 +68,5 @@ def metrics (dataName):
                 tsvFile.write('\t'.join([dataName, classifier, str(iteration), str(predictionType), str(accuracy), str(f1Score), str(f1Weighted), str(averagePrecision), str(rocAucScore)]) + '\n')
 
 
-for dataName in dataResults["DataName"].unique():
-    metrics(dataName)
+#for dataName in dataResults["DataName"].unique():
+metrics("iris")

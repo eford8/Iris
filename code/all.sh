@@ -2,7 +2,7 @@
 
 #python initialization.py
 
-python classify.py "iris" "1" "0"
+#python classify.py "iris" "1" "0"
 #python classify.py "breast" "1" "0"
 #python classify.py "horse_colic" "1" "0"
 #python classify.py "Gametes_Epistasis" "1" "0"
@@ -47,5 +47,4 @@ python metrics.py  #run this line of code with new version of metrics.py
 #python metrics.py "horse_colic" "WeightedEnsemblePredictions"
 #python metrics.py "Gametes_Epistasis" "WeightedEnsemblePreditions"
 #python metrics.py "magic" "WeightedEnsemblePreditions"
-
 
