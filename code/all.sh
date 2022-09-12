@@ -14,11 +14,15 @@ python classify.py "iris" "1" "0"
 #python metrics.py "Gametes_Epistasis" "Classifications"
 #python metrics.py "magic" "Classifications"
 
+#python ensemblePredictions.py "1" "0" #run this line of code with new version of ensemblePredictions.py
+
 #python ensemblePredictions.py "iris" "" "1" "0"
 #python ensemblePredictions.py "breast" "" "1" "0"
 #python ensemblePredictions.py "horse_colic" "" "1" "0"
 #python ensemblePredictions.py "Gametes_Epistasis" "" "1" "0"
 #python ensemblePredictions.py "magic" "" "1" "0"
+
+python metrics.py  #run this line of code with new version of metrics.py 
 
 #python metrics.py "iris" "EnsemblePredictions"
 #python metrics.py "breast" "EnsemblePredictions"

@@ -13,7 +13,7 @@ docker build -t $image .
 mkdir -p $currentDir/../results
 chmod 777 $currentDir/../results
 
-#docker run -d --rm \ 
+#docker run -d --rm \
 docker run -i -t --rm \
   --user $(id -u):$(id -g) \
   -v ${dataDir}:/data \
