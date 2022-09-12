@@ -99,6 +99,6 @@ def combinedFunction (dataName):
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
-for dataName in dataResults["DataName"].unique():
-    combinedFunction(dataName)
+#for dataName in dataResults["DataName"].unique():
+combinedFunction("magic")   #dataName
 
