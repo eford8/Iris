@@ -18,7 +18,7 @@ def metrics ():
     print("Calculating metrics for " + sys.argv[1] + sys.argv[2] + " dataset\n")
     resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + '_3.tsv' #the file created from classify.py or from ensemblePredictions.py
     originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-    outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Metrics_3.tsv'
+    outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Metrics.tsv'
     
     dataResults = pd.read_csv(resultsFile, sep = '\t')
     ogData = pd.read_csv(originalDataFile)
