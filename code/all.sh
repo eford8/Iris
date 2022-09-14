@@ -7,6 +7,7 @@
 #python classify.py "horse_colic" "1" "0"
 #python classify.py "Gametes_Epistasis" "1" "0"
 #python classify.py "magic" "1" "0"
+python classify.py "hypothyroid" "1" "0"
 
 #python metrics.py "iris" "Classifications"
 #python metrics.py "breast" "Classifications"
@@ -22,7 +23,7 @@
 #python ensemblePredictions.py "Gametes_Epistasis" "" "1" "0"
 #python ensemblePredictions.py "magic" "" "1" "0"
 
-python metrics.py  #run this line of code with new version of metrics.py 
+#python metrics.py  #run this line of code with new version of metrics.py 
 
 #python metrics.py "iris" "EnsemblePredictions"
 #python metrics.py "breast" "EnsemblePredictions"
