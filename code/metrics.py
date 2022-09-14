@@ -46,13 +46,17 @@ def metrics (dataName):
                 predictionType = ""
 
                 for i in range(1, len(filteredResults)):   # this block can be optimized dataResults
-                    row = dataResults.iloc[i]
+                    row = filteredResults.iloc[i] # dataResults
                     if(str(row['Classifier']) == classifier):
                         if(str(row['Iteration']) == str(iteration)):
                             y_pred.append(row['Prediction'])
                             y_target.append(row['Target'])
                             predictionType = row["PredictionType"]
-                
+                print(dataName)
+                print(classifier)
+                print(iteration)
+                print(y_pred)
+                print(y_target)
                 accuracy = accuracy_score(y_target, y_pred)
                 f1Score = f1_score(y_target, y_pred, average='binary')
                 f1Weighted = f1_score(y_target, y_pred, average='weighted')
