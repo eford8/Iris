@@ -62,5 +62,5 @@ generalInitialization("breast")
 generalInitialization("horse_colic")
 generalInitialization("Gametes_Epistasis")
 generalInitialization("magic")
-
+generalInitialization("hypothyroid")
 
