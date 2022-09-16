@@ -45,7 +45,7 @@ irisDataInitialization()
 ########## general function for initialization ###########
 
 def generalInitialization(dataType) :
-    #Read in the Date from the tsv file using Pandas 
+    #Read in the data from the tsv file using Pandas 
     print("Initializing " + dataType + "\n")
 
     fileName = "data/" + dataType + ".tsv"
@@ -58,9 +58,29 @@ def generalInitialization(dataType) :
     newFileName = "data/" + dataType + "Modified.csv"
     df.to_csv(newFileName, index = False)
 
-generalInitialization("breast")
-generalInitialization("horse_colic")
-generalInitialization("Gametes_Epistasis")
-generalInitialization("magic")
-generalInitialization("hypothyroid")
+def horseColicInitialization(dataType) :
+    #Read in the data from the tsv file using Pandas
+    print("Initializing " + dataType + "\n")
+
+    fileName = "data/" + dataType + ".tsv"
+    df = pd.read_csv(fileName, sep='\t', header=0) #dataframe
+
+    columnNames = list(df.columns)
+    print(df.head())
+
+    #Changing the "1" --> "0" and the "2" --> "1"
+    df.loc[df["target"] == 1, "target"] = 0
+    df.loc[df["target"] == 2, "target"] = 1
+
+    #Create a modified csv file for the modified data
+    newFileName = "data/" + "horseColic" + "Modified.csv"
+    df.to_csv(newFileName, index = False)
+
+
+#generalInitialization("breast")
+#generalInitialization("horse_colic")
+horseColicInitialization("horse_colic")
+#generalInitialization("Gametes_Epistasis")
+#generalInitialization("magic")
+#generalInitialization("hypothyroid")
 

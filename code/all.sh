@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#python initialization.py
+python initialization.py
 
 #python classify.py "iris" "1" "0"
 #python classify.py "breast" "1" "0"
@@ -15,7 +15,7 @@
 #python metrics.py "Gametes_Epistasis" "Classifications"
 #python metrics.py "magic" "Classifications"
 
-python ensemblePredictions.py "1" "0" #run this line of code with new version of ensemblePredictions.py
+#python ensemblePredictions.py "1" "0" #run this line of code with new version of ensemblePredictions.py
 
 #python ensemblePredictions.py "iris" "" "1" "0"
 #python ensemblePredictions.py "breast" "" "1" "0"
