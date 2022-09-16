@@ -15,10 +15,11 @@ import random
 import sys
 import csv
 import os
+import time
 
 ####################
-## This file takes a modified datafile and tried to predict the different outcomes.
-## It creates a file called "type of data" Classifications.tsv
+## This file takes a modified datafile and makes predictions using different classification algorithms.
+## It creates a file called Classifications.tsv
 ####################
 
 
@@ -114,20 +115,21 @@ random.seed(1)
 
 df = pd.read_csv(fileName).to_numpy()
 
-# gets the data and seperates it from the labels
-# if (sys.argv[1] == "iris") :
-#     data = df[:, :3]
-#     predictColumn = df[:, 5]
-# else :
 data = df[:, :-1]
 predictColumn = df[ :, -1:].ravel()
 
 print(predictColumn)
 
 for classifier in CLASSIFIERS:
+    #Record start time
+    start = time.time()
     for score in crossValidate(data, predictColumn, classifier):
+        #record end time
+        end = time.time()
+        #the difference between the start and end time in milli. secs
+        timeElapsed = (end - start) * 10**3  #the units for this measurement are "ms"
         classifier_name = str(classifier[0]).split("'")[1].split(".")[-1].replace("Classifier", "")
-        results.append([classifier_name, score[0], score[1], score[2], score[3], score[4]])
+        results.append([classifier_name, score[0], score[1], score[2], score[3], score[4], timeElapsed])
 
 print("scores")
 print(results)
@@ -135,7 +137,7 @@ print(results)
 def appendTSV(results):
     if(not os.path.exists(outFile)): 
         with open(outFile, "w") as tsvFile:
-            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\tTime\n")
     
     with open(outFile, "a") as tsvFile:
         for prediction in results:
@@ -154,7 +156,7 @@ def appendTSV(results):
             else:
                 predictionType = "Ensemble"
 
-            tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str(predictionType), str(prediction[4]), predict]) + '\n')
+            tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str(predictionType), str(prediction[4]), predict, str(prediction[5])]) + '\n')
 
 def createTSV(results):
     print("Creating TSV file...")
