@@ -33,6 +33,7 @@ def combinedFunction (dataName):
     listAvg = []
     listMajority = []
     listMax = []
+    print("Running ensemble predictions for " + dataName + " dataset....")
 
     for x in range(elementsPerClassifier) :
         rowNum = singleData.iloc[x]["OriginalRow"]
@@ -100,5 +101,9 @@ def combinedFunction (dataName):
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
 
 #for dataName in dataResults["DataName"].unique():
-combinedFunction("magic")   #dataName
+combinedFunction("iris")   #dataName
+combinedFunction("breast")
+combinedFunction("horse_colic")
+combinedFunction("Gametes_Epistasis")
+combinedFunction("hypothyroid")
 
