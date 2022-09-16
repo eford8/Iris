@@ -2,6 +2,7 @@ import pandas as pd
 import sys
 import statistics
 import os
+import time
 
 #################
 ## This file take the files created from classify.py and finds the averageProb, majorityVote, and maxProb
@@ -33,6 +34,9 @@ def combinedFunction (dataName):
     listAvg = []
     listMajority = []
     listMax = []
+    listTime = []   #Added for keeping track of the time
+    #record the start time
+    start = time.time()
     print("Running ensemble predictions for " + dataName + " dataset....")
 
     for x in range(elementsPerClassifier) :
@@ -69,7 +73,7 @@ def combinedFunction (dataName):
     if not os.path.exists(outFile):
         with open(outFile, "w") as tsvFile:
             print("writing to " + outFile)
-            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\n")
+            tsvFile.write("DataName\tOriginalRow\tTarget\tIteration\tClassifier\tPredictionType\tPredictionScore\tPrediction\tTime\n")
     
     with open(outFile, 'a') as tsvFile:
         for x in range(elementsPerClassifier) :
@@ -96,14 +100,19 @@ def combinedFunction (dataName):
             ensembleType = "BasicEnsemble"
             #if(sys.argv[2] == "Weighted"):
             #    ensembleType = "WeightedEnsemble"
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\n')
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\n')
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\n')
+
+            #record end time
+            end = time.time()
+            timeElapsed = (end - start) * 10**3
+
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\t'+str(timeElapsed)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\t'+str(timeElapsed)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\t'+str(timeElapsed)+'\n')
 
 #for dataName in dataResults["DataName"].unique():
-combinedFunction("iris")   #dataName
+#combinedFunction("iris")   #dataName
 combinedFunction("breast")
-combinedFunction("horse_colic")
-combinedFunction("Gametes_Epistasis")
-combinedFunction("hypothyroid")
+#combinedFunction("horse_colic")
+#combinedFunction("Gametes_Epistasis")
+#combinedFunction("hypothyroid")
 
