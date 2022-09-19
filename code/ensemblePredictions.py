@@ -35,8 +35,6 @@ def combinedFunction (dataName):
     listMajority = []
     listMax = []
     listTime = []   #Added for keeping track of the time
-    #record the start time
-    start = time.time()
     print("Running ensemble predictions for " + dataName + " dataset....")
 
     for x in range(elementsPerClassifier) :
@@ -45,10 +43,12 @@ def combinedFunction (dataName):
         averageProb = []
         majorityPredictions = []
         maxPredictions = []
-
+        
         for i in range(len(singleData)):
             row = singleData.iloc[i]
 
+            #Record the start time
+            start = time.time()
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
 
@@ -68,6 +68,12 @@ def combinedFunction (dataName):
         listMax.append(maxPredictions[maxIndex])
         listMajority.append(statistics.mean(majorityPredictions)) 
         listAvg.append(statistics.mean(averageProb))
+
+        #record end time
+        end = time.time()
+        timeElapsed = (end - start) * 10**3
+
+        listTime.append(timeElapsed)
 
     print("Creating TSV file...")
     if not os.path.exists(outFile):
@@ -101,13 +107,9 @@ def combinedFunction (dataName):
             #if(sys.argv[2] == "Weighted"):
             #    ensembleType = "WeightedEnsemble"
 
-            #record end time
-            end = time.time()
-            timeElapsed = (end - start) * 10**3
-
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\t'+str(timeElapsed)+'\n')
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\t'+str(timeElapsed)+'\n')
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\t'+str(timeElapsed)+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\t'+str(listTime[x])+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\t'+str(listTime[x])+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\t'+str(listTime[x])+'\n')
 
 #for dataName in dataResults["DataName"].unique():
 #combinedFunction("iris")   #dataName

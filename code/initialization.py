@@ -73,7 +73,7 @@ def horseColicInitialization(dataType) :
     df.loc[df["target"] == 2, "target"] = 1
 
     #Create a modified csv file for the modified data
-    newFileName = "data/" + "horseColic" + "Modified.csv"
+    newFileName = "data/" + dataType + "Modified.csv"
     df.to_csv(newFileName, index = False)
 
 
