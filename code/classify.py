@@ -4,6 +4,8 @@ import sklearn
 from autosklearn.classification import AutoSklearnClassifier ## install auto-sklearn
 from deslib.dcs.lca import LCA # for now we are doing dynamic classifier selection (DCS)
 from deslib.des.meta_des import METADES
+from deslib.static.oracle import Oracle
+from deslib.des.knora_e import KNORAE
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -24,10 +26,13 @@ import time
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/Classifications.tsv"
+outFile = "/results/ClassificationsIris.tsv"
 #outFile = "/results/" + sys.argv[1] + "Classifications.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
+count = 0
+autoSklearnVariations = ["Pick one from a list", "Ensemble from a list", "Pick one from all algorithms", "Unrestricted ensemble"]
+
 
 def crossValidate(df, labels, clf) :
     X = df
@@ -66,14 +71,15 @@ def crossValidate(df, labels, clf) :
 
         if(classifier == StructuredDataClassifier) :
             probabilities = classifier.predict(X[test_index])
-        else : 
+        elif(classifier == Oracle or classifier == KNORAE ) :
+            probabilities = classifier.predict_proba(X[test_index], y[test_index]) 
+        else:
             probabilities = classifier.predict_proba(X[test_index])
 
         #print(X[test_index])
         #print(probs)
         #print(probabilities)
         probs = np.vstack([probs, probabilities])
-
 
         #Find the rocaucscore
         rocaucscores = roc_auc_score(y, classifier.predict_proba(X)[:, 1])
@@ -96,17 +102,45 @@ CLASSIFIERS = [
     (LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
     (SVC, {"random_state": 0, "probability": True}),
     (KNeighborsClassifier, {"n_neighbors":10}),
+    
+    #Pick one from a list [RF, LC, KN, SVC]
     (AutoSklearnClassifier, {"time_left_for_this_task":60, 
                                 "per_run_time_limit":30,
                                 "ensemble_size":1, # for now we don't want it to find ensemble algorithms
                                 "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "k_nearest_neighbors", "liblinear_svc"]}
+                                "include":{'classifier': ["random_forest", "SGDClassifier", "k_nearest_neighbors", "liblinear_svc"]}
                                 }),
+    
+    #Ensemble from list [RF, LC, KN, SVC]
+    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
+                                "per_run_time_limit":30,
+                                #"ensemble_size":1, 
+                                "memory_limit":None,
+                                "include":{'classifier': ["random_forest", "SGDClassifier", "k_nearest_neighbors", "liblinear_svc"]}
+                                }),
+
+    #Pick one from all algorithms
+    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
+                                "per_run_time_limit":30,
+                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+                                "memory_limit":None,
+                                }),
+
+    #Unrestricted ensemble 
+    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
+                                "per_run_time_limit":30,
+                                #"ensemble_size":1, 
+                                "memory_limit":None,
+                                }),
+
+
    # (StructuredDataClassifier, {})
    (METADES, {"random_state": 0}),
    (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
             "random_state": 0
-            })
+            }),
+   (Oracle, {"random_state": 0}),
+   (KNORAE, {"random_state": 0})
    
 ]
 
@@ -123,12 +157,16 @@ print(predictColumn)
 for classifier in CLASSIFIERS:
     #Record start time
     start = time.time()
+    if(classifier == AutoSklearnClassifier) :
+        count += 1
     for score in crossValidate(data, predictColumn, classifier):
         #record end time
         end = time.time()
         #the difference between the start and end time in milli. secs
         timeElapsed = (end - start) * 10**3  #the units for this measurement are "ms"
         classifier_name = str(classifier[0]).split("'")[1].split(".")[-1].replace("Classifier", "")
+        if(classifier_name == AutoSklearnClassifier) :
+            classifier_name = "AutoSklearn: " + autoSklearnVariations[count -1]
         results.append([classifier_name, score[0], score[1], score[2], score[3], score[4], timeElapsed])
 
 print("scores")
