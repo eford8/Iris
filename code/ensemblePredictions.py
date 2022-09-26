@@ -111,9 +111,11 @@ def combinedFunction (dataName):
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\t'+str(listTime[x])+'\n')
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\t'+str(listTime[x])+'\n')
 
-#for dataName in dataResults["DataName"].unique():
+for dataName in dataResults["DataName"].unique():
+    combinedFunction(dataName)
+
 #combinedFunction("iris")   #dataName
-combinedFunction("breast")
+#combinedFunction("breast")
 #combinedFunction("horse_colic")
 #combinedFunction("Gametes_Epistasis")
 #combinedFunction("hypothyroid")
