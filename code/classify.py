@@ -27,7 +27,7 @@ import time
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/ClassificationsIris.tsv"
+outFile = "/results/Classifications.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 count = 0
@@ -103,34 +103,34 @@ CLASSIFIERS = [
     (KNeighborsClassifier, {"n_neighbors":10}),
     
     #Pick one from a list [RF, LC, KN, SVC]
-    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
-                                "per_run_time_limit":30,
-                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
-                                }),
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
+    #                            "per_run_time_limit":30,
+    #                            "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+    #                            "memory_limit":None,
+    #                            "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
+    #                            }),
     
     #Ensemble from list [RF, LC, KN, SVC]
-    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
-                                "per_run_time_limit":30,
-                                #"ensemble_size":1, 
-                                "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
-                                }),
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
+    #                            "per_run_time_limit":30,
+    #                            #"ensemble_size":1, 
+    #                            "memory_limit":None,
+    #                            "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
+    #                            }),
 
     #Pick one from all algorithms
-    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
-                                "per_run_time_limit":30,
-                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "memory_limit":None,
-                                }),
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
+    #                            "per_run_time_limit":30,
+    #                            "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+    #                            "memory_limit":None,
+    #                            }),
 
     #Unrestricted ensemble 
-    (AutoSklearnClassifier, {"time_left_for_this_task":60, 
-                                "per_run_time_limit":30,
-                                #"ensemble_size":1, 
-                                "memory_limit":None,
-                                }),
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
+    #                            "per_run_time_limit":30,
+    #                            #"ensemble_size":1, 
+    #                            "memory_limit":None,
+    #                            }),
 
    (METADES, {"random_state": 0}),
    (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],

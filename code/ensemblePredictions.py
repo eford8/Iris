@@ -9,19 +9,14 @@ import time
 ## It is a basic emsemble 
 #################
 
-#resultsFile = 'results/' + sys.argv[1] + sys.argv[2] + 'Classifications.tsv'
+
 resultsFile = 'results/Classifications.tsv'
-#originalDataFile = 'data/' + sys.argv[1] + 'Modified.csv'
-#outFile = 'results/' + sys.argv[1] + sys.argv[2] + 'EnsemblePredictions.tsv'
 outFile = 'results/Classifications.tsv'
 classOne = sys.argv[1]
 classTwo = sys.argv[2]
 
 dataResults = pd.read_csv (resultsFile, sep = '\t')
-#dataResults = dataResults[Classifier in listOfClassifiers]
-#ogData = pd.read_csv (originalDataFile)
 
-#listOfClassifiers = dataResults["Classifier"].unique()
 listOfClassifiers = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]
 dataResults = dataResults[dataResults.Classifier.isin(listOfClassifiers)]
 #elementsPerClassifier = int(len(dataResults)/len(listOfClassifiers))
@@ -40,21 +35,25 @@ def combinedFunction (dataName):
     for x in range(elementsPerClassifier) :
         rowNum = singleData.iloc[x]["OriginalRow"]
         iteration = singleData.iloc[x]["Iteration"]
+        classifyTime = 0
         averageProb = []
         majorityPredictions = []
         maxPredictions = []
+
         
         for i in range(len(singleData)):
             row = singleData.iloc[i]
-
-            #Record the start time
-            start = time.time()
+                        
+            #Record the start time #this give us the time per row, not iteration
+            #start = time.time()
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
 
                     averageProb.append(row['PredictionScore'])
                     maxPredictions.append(row['PredictionScore'])  
                     majorityPredictions.append(row['PredictionScore'])
+                    
+                    classifyTime = classifyTime + row['Time']
 
                     if(row['PredictionScore'] >= 0.5) :
                         majorityPredictions.append(int(classOne))
@@ -72,6 +71,7 @@ def combinedFunction (dataName):
         #record end time
         end = time.time()
         timeElapsed = (end - start) * 10**3
+        timeElapsed = (timeElapsed/3) + classifyTime
 
         listTime.append(timeElapsed)
 
