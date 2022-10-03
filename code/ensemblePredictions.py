@@ -70,10 +70,11 @@ def combinedFunction (dataName):
 
         #record end time
         end = time.time()
-        timeElapsed = (end - start) * 10**3
-        timeElapsed = (timeElapsed/3) + classifyTime
+        #timeElapsed = (end - start) * 10**3
+        #timeElapsed = (timeElapsed/3) + classifyTime
 
-        listTime.append(timeElapsed)
+        #listTime.append(timeElapsed)
+        listTime.append(classifyTime)
 
     print("Creating TSV file...")
     if not os.path.exists(outFile):
