@@ -31,7 +31,7 @@ outFile = "/results/Classifications.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
 count = 0
-autoSklearnVariations = ["Pick one from a list", "Ensemble from a list", "Pick one from all algorithms", "Unrestricted ensemble"]
+autoSklearnVariations = ["Pick one from list", "Ensemble from list", "Pick one from all", "Ensemble from all"]
 
 def crossValidate(df, labels, clf) :
     X = df
@@ -102,35 +102,35 @@ CLASSIFIERS = [
     (SVC, {"random_state": 0, "probability": True}),
     (KNeighborsClassifier, {"n_neighbors":10}),
     
-    #Pick one from a list [RF, LC, KN, SVC]
-    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
-    #                            "per_run_time_limit":30,
-    #                            "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-    #                            "memory_limit":None,
-    #                            "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
-    #                            }),
+    #Pick one from a list [RF, LC, KN, SVC] #select basic
+    (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
+                                "per_run_time_limit":60,
+                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
+                                "memory_limit":None,
+                                "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
+                                }),
     
-    #Ensemble from list [RF, LC, KN, SVC]
-    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
-    #                            "per_run_time_limit":30,
+    #Ensemble from list [RF, LC, KN, SVC] #basic ensemble 
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
+    #                            "per_run_time_limit":60,
     #                            #"ensemble_size":1, 
     #                            "memory_limit":None,
     #                            "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
     #                            }),
 
-    #Pick one from all algorithms
-    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
-    #                            "per_run_time_limit":30,
+    #Pick one from all algorithms #select from all 
+    #(AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
+    #                            "per_run_time_limit":60,
     #                            "ensemble_size":1, # for now we don't want it to find ensemble algorithms
     #                            "memory_limit":None,
     #                            }),
 
-    #Unrestricted ensemble 
-    #(AutoSklearnClassifier, {"time_left_for_this_task":60, 
-    #                            "per_run_time_limit":30,
-    #                            #"ensemble_size":1, 
-    #                            "memory_limit":None,
-    #                            }),
+    #Unrestricted ensemble #ensemble from all
+   # (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
+   #                             "per_run_time_limit":60,
+   #                             #"ensemble_size":1, 
+   #                             "memory_limit":None,
+   #                             }),
 
    (METADES, {"random_state": 0}),
    (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
@@ -180,8 +180,10 @@ def appendTSV(results):
             basic = ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"]    
             if prediction[0] in basic:
                 predictionType = "Basic"
+            elif prediction[0].startswith("AutoSklearn"):
+                predictionType = "AutoSklearn Ensemble"
             else:
-                predictionType = "Ensemble"
+                predictionType = "DESLib Ensemble"
 
             tsvFile.write('\t'.join([str(sys.argv[1]), str(int(prediction[2])), str(target), str(int(prediction[1])), str(prediction[0]), str(predictionType), str(prediction[4]), predict, str(prediction[6])]) + '\n')
 

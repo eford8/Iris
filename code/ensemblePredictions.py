@@ -26,7 +26,7 @@ def combinedFunction (dataName):
     ogData = pd.read_csv (originalDataFile)
     singleData = dataResults[dataResults["DataName"] == dataName]
     elementsPerClassifier = int(len(singleData)/len(listOfClassifiers))
-    listAvg = []
+    listMean = []
     listMajority = []
     listMax = []
     listTime = []   #Added for keeping track of the time
@@ -36,7 +36,7 @@ def combinedFunction (dataName):
         rowNum = singleData.iloc[x]["OriginalRow"]
         iteration = singleData.iloc[x]["Iteration"]
         classifyTime = 0
-        averageProb = []
+        meanProb = []
         majorityPredictions = []
         maxPredictions = []
 
@@ -44,12 +44,10 @@ def combinedFunction (dataName):
         for i in range(len(singleData)):
             row = singleData.iloc[i]
                         
-            #Record the start time #this give us the time per row, not iteration
-            #start = time.time()
             if(str(row['OriginalRow']) == str(rowNum)) : 
                 if(str(row['Iteration']) == str(iteration)) :
 
-                    averageProb.append(row['PredictionScore'])
+                    meanProb.append(row['PredictionScore'])
                     maxPredictions.append(row['PredictionScore'])  
                     majorityPredictions.append(row['PredictionScore'])
                     
@@ -66,14 +64,11 @@ def combinedFunction (dataName):
 
         listMax.append(maxPredictions[maxIndex])
         listMajority.append(statistics.mean(majorityPredictions)) 
-        listAvg.append(statistics.mean(averageProb))
+        listMean.append(statistics.mean(meanProb))
 
         #record end time
         end = time.time()
-        #timeElapsed = (end - start) * 10**3
-        #timeElapsed = (timeElapsed/3) + classifyTime
 
-        #listTime.append(timeElapsed)
         listTime.append(classifyTime)
 
     print("Creating TSV file...")
@@ -86,15 +81,15 @@ def combinedFunction (dataName):
         for x in range(elementsPerClassifier) :
             row = singleData.iloc[x]
 
-            averageProbClass = 0
+            meanProbClass = 0
             majorityPreditionClass = 0
             maxPreditionClass = 0
 
             #Assigns the class prediction based on the prediction score 
-            if listAvg[x] >= 0.5:
-                averageProbClass = classOne
+            if listMean[x] >= 0.5:
+                meanProbClass = classOne
             else:
-                averageProbClass = classTwo
+                meanProbClass = classTwo
             if listMajority[x] >= 0.5:
                 majorityPreditionClass = classOne
             else:
@@ -108,7 +103,7 @@ def combinedFunction (dataName):
             #if(sys.argv[2] == "Weighted"):
             #    ensembleType = "WeightedEnsemble"
 
-            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("AverageProb")+'\t'+ensembleType+'\t'+str(listAvg[x])+'\t'+str(averageProbClass)+'\t'+str(listTime[x])+'\n')
+            tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MeanProb")+'\t'+ensembleType+'\t'+str(listMean[x])+'\t'+str(meanProbClass)+'\t'+str(listTime[x])+'\n')
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("MajorityVote")+'\t'+ensembleType+'\t'+str(listMajority[x])+'\t'+str(majorityPreditionClass)+'\t'+str(listTime[x])+'\n')
             tsvFile.write(dataName+'\t'+str(row["OriginalRow"])+'\t'+str(row["Target"])+'\t'+str(row["Iteration"])+"\t"+str("ExtremeProb")+'\t'+ensembleType+'\t'+str(listMax[x])+'\t'+str(maxPreditionClass)+'\t'+str(listTime[x])+'\n')
 
@@ -119,5 +114,6 @@ for dataName in dataResults["DataName"].unique():
 #combinedFunction("breast")
 #combinedFunction("horse_colic")
 #combinedFunction("Gametes_Epistasis")
+#combinedFunction("magic")
 #combinedFunction("hypothyroid")
 
