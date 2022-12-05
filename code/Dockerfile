@@ -69,5 +69,6 @@ COPY entry.sh /
 COPY addWeights.py /
 COPY classifyDuplicate.py / 
 COPY weightedClassify.py /
+COPY autosklearnClassify.py /
 
 ENTRYPOINT bash /entry.sh

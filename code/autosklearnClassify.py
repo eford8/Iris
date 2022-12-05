@@ -27,12 +27,12 @@ import time
 
 
 fileName = "data/" + sys.argv[1] + "Modified.csv"
-outFile = "/results/Classifications.tsv"
-outFile1 = "/results/Classifications.tsv"
+outFile = "/results/ClassificationsAutoSklearnALL.tsv"
 classOne = sys.argv[2]
 classTwo = sys.argv[3]
+timeAlloted = sys.argv[4]
 count = 0
-autoSklearnVariations = ["Pick one from list", "Ensemble from list", "Pick one from all", "Ensemble from all"]
+autoSklearnVariations = {"Five Minutes": 60*5, "One Hour": 60*60, "Six Hours": 60*60*6, "Twenty Four Hours":60*60*24}
 
 def crossValidate(df, labels, clf) :
     X = df
@@ -97,50 +97,15 @@ def crossValidate(df, labels, clf) :
     
     return scores
 
+
 CLASSIFIERS = [
-    (RandomForestClassifier, {"n_estimators": 100, "random_state" : 0}),
-    (LogisticRegression, {"random_state" : 0, "max_iter" : 500}),
-    (SVC, {"random_state": 0, "probability": True}),
-    (KNeighborsClassifier, {"n_neighbors":10})#,
     
-    #Pick one from a list [RF, LC, KN, SVC] #select basic
-    (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
-                                "per_run_time_limit":60,
-                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
-                                }),
-    
-    #Ensemble from list [RF, LC, KN, SVC] #basic ensemble 
-    (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
-                                "per_run_time_limit":60,
-                                #"ensemble_size":1, 
-                                "memory_limit":None,
-                                "include":{'classifier': ["random_forest", "sgd", "k_nearest_neighbors", "liblinear_svc"]}
-                                }),
-
-    #Pick one from all algorithms #select from all 
-    (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
-                                "per_run_time_limit":60,
-                                "ensemble_size":1, # for now we don't want it to find ensemble algorithms
-                                "memory_limit":None,
-                                }),
-
-    #Unrestricted ensemble #ensemble from all 5 minutes
-    (AutoSklearnClassifier, {"time_left_for_this_task":60*5, 
+    (AutoSklearnClassifier, {"time_left_for_this_task":autoSklearnVariations[timeAlloted], 
                                 #"per_run_time_limit":60,
                                 #"ensemble_size":1, 
                                 "memory_limit":None,
-                                }),
+                                })
 
-    
-    (METADES, {"random_state": 0}),
-   (LCA, {#"pool_classifiers" : [RandomForestClassifier, LogisticRegression, KNeighborsClassifier],
-            "random_state": 0
-            }),
-   (DESClustering, {"random_state": 0}),
-   (KNORAE, {"random_state": 0})
-   
 ]
 
 results = []
@@ -153,11 +118,9 @@ predictColumn = df[ :, -1:].ravel()
 
 for classifier in CLASSIFIERS:
     classifier_name = str(classifier[0]).split("'")[1].split(".")[-1].replace("Classifier", "")
-    if(classifier_name == "AutoSklearn") :
-        count += 1
     for score in crossValidate(data, predictColumn, classifier):
         if(classifier_name == "AutoSklearn") :
-            classifier_name = "Auto/" + autoSklearnVariations[count -1]
+            classifier_name = "Auto/" + timeAlloted
         results.append([classifier_name, score[0], score[1], score[2], score[3], score[4], score[5]]) #score[6] timeElapsed
 
 print("scores")
